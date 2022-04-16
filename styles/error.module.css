@@ -1,0 +1,39 @@
+.errorWrap {
+  color: #444444;
+  text-align: center;
+  padding: 10px 0;
+  width: 50%;
+  margin: 0 auto;
+  height: 100vh;
+  overflow: hidden;
+}
+.errorWrap h3 {
+  font-size: 160px;
+  line-height: 1em;
+  margin: 0 0 20px;
+}
+.errorWrap h4 {
+  font-size: 25px;
+  margin: 0 0 20px;
+}
+.errorWrap p {
+  margin: 0 0 10px;
+}
+.btn_home{
+    display: inline-block;
+    outline: none;
+    height: 32px;
+    background-color: #652f8f;
+    font-size: 15px;
+    color: #fff;
+    font-weight: 700;
+    line-height: 32px;
+    padding: 0 20px;
+    margin: 15px 0 0;
+    border-radius: 5px;
+    border: 0;
+}
+.btn_home a{
+  color: #fff;
+  text-decoration: none;
+}
