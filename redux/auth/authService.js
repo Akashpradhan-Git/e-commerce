@@ -8,16 +8,16 @@ console.log(`${API_HOST}`);
 //Login User
 const login = async (userData) => {
     try {
-        const response = await axios.post(`${API_HOST}/login`, userData, {
+        const { data } = await axios.post(`${API_HOST}/login`, userData, {
             headers: {
                 'Content-Type': 'application/json',
             }
         });
-        console.log(response.data);
-        if (response.data) {
-            localStorage.setItem('user', JSON.stringify(response.data));
+        console.log(data.data);
+        if (data.data) {
+            localStorage.setItem('user', JSON.stringify(data.data));
         }
-        return response.data;
+        return data.data;
     } catch (error) {
         console.log(error);
     }

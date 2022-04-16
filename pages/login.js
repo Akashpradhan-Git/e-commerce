@@ -23,7 +23,7 @@ const loginUser = () => {
 
 
     const decodeToken = (user) => {
-        const decodeToken = jwt.decode(user.data)
+        const decodeToken = jwt.decode(user)
         return decodeToken;
     }
 

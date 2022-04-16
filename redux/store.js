@@ -6,6 +6,6 @@ export default configureStore({
     reducer: {
         switchMenu: menuReducer,
         auth: authReducer,
-        user: userReducer,
+        usersData: userReducer,
     }
 })

@@ -6,12 +6,12 @@ import DefaultLayout from "../layout/default";
 
 export default function MainLayout({ children }) {
     const isActive = useSelector((state) => state.switchMenu.sideMenu);
-    // const { isLoggedIn } = useSelector((state) => state.auth.isLoggedIn);
-    const isLoggedIn = true;
-
+    // const { user } = useSelector((state) => state.auth);
+    // console.log(user);
+    const user = true;
     return (
         <>
-            {isLoggedIn ?
+            {user != null ?
                 <>
                     <main className={isActive}>
                         <div className="container-scroller">

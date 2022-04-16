@@ -1,13 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import PageLayout from '../../components/layout/PageLayout'
 import PageName from '../../components/page_components/PageName'
 import MainLayout from '../../components/layout/main'
-import Link from 'next/link'
-
+import { useSelector, useDispatch } from 'react-redux'
 import { FaEdit, FaEye, FaLock } from 'react-icons/fa'
+import { getUser, reset } from '../../redux/user/userSlice'
+import { toast } from 'react-toastify'
 
-const viewUser = ({ user }) => {
+import { API_HOST } from '../../api/api'
+import axios from 'axios'
+import Spinner from '../../components/util/Spinner'
+const viewUser = () => {
+    const dispatch = useDispatch()
+    const { userList, isLoading, isError, isSuccess, message } = useSelector(state => state.usersData)
+
+
+    useEffect(() => {
+        if (isError) {
+            console.log(message)
+        }
+        dispatch(getUser())
+        return () => {
+            dispatch(reset())
+        }
+    }, [isError, dispatch])
+
+    if (isLoading) {
+        return <Spinner />
+    }
+    console.log(userList)
+
+
     return (
         <>
             <Head>
@@ -35,7 +59,7 @@ const viewUser = ({ user }) => {
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        {/* <tbody>
                                             {
                                                 user.map((item, index) => {
                                                     return (
@@ -61,7 +85,8 @@ const viewUser = ({ user }) => {
                                                     )
                                                 })
                                             }
-                                        </tbody>
+
+                                        </tbody> */}
                                     </table>
                                 </div>
                             </div>
@@ -77,15 +102,3 @@ viewUser.Layout = MainLayout;
 export default viewUser
 
 
-export const getServerSideProps = async () => {
-    const res = await fetch(
-        `https://jsonplaceholder.typicode.com/users`
-    );
-    const user = await res.json();
-
-    return {
-        props: {
-            user,
-        },
-    };
-};

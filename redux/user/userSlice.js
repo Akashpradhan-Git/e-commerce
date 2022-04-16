@@ -2,17 +2,35 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import userService from './userService'
 
 const initialState = {
-    users: [],
+    userList: [],
     isError: false,
     isSuccess: false,
     isLoading: false,
     message: '',
 }
 
+//*CREATE USER
 
-// Get user user
+export const createUser = createAsyncThunk('user/createUser',
+    async (userData, thunkAPI) => {
+        try {
+            const token = thunkAPI.getState().auth.user.data;
+            return await userService.createUser(userData, token)
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString()
+            return thunkAPI.rejectWithValue(message)
+        }
+    })
+
+
+//* Get user 
 export const getUser = createAsyncThunk(
-    'user/getAll',
+    'users/getAll',
     async (_, thunkAPI) => {
         try {
             const token = thunkAPI.getState().auth.user.data
@@ -31,16 +49,10 @@ export const getUser = createAsyncThunk(
 )
 
 export const userSlice = createSlice({
-    name: 'user',
+    name: 'usersData',
     initialState,
     reducers: {
-        reset: (state) => {
-            state.users = []
-            state.isError = false
-            state.isSuccess = false
-            state.isLoading = false
-            state.message = ""
-        }
+        reset: (state) => initialState,
     },
     extraReducers: (builder) => {
         builder
@@ -50,7 +62,7 @@ export const userSlice = createSlice({
             .addCase(getUser.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.users = action.payload
+                state.userList = action.payload
             })
             .addCase(getUser.rejected, (state, action) => {
                 state.isLoading = false
