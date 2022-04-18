@@ -10,7 +10,7 @@ const login = async (userData) => {
     try {
         const { data } = await axios.post(`${API_HOST}/login`, userData, {
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             }
         });
         console.log(data.data);

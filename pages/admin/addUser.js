@@ -4,9 +4,11 @@ import PageName from '../../components/page_components/PageName'
 import MainLayout from '../../components/layout/main'
 import InputField from '../../components/form-element/InputField'
 import Head from 'next/head'
-
+import TableRows from '../../components/table/TableRows'
+import { AiOutlinePlus } from "react-icons/ai";
 
 const addUser = () => {
+    const [rowsData, setRowsData] = useState([]);
     const [inputValue, setInputValue] = useState({
         userid: "",
         fname: "",
@@ -23,13 +25,54 @@ const addUser = () => {
             ...prev,
             [name]: value,
         }));
-        console.log(inputValue);
+
     };
 
+    //TODO Dynamic Table Rows
+    const addTableRows = () => {
+
+        const rowsInput = {
+            pRole: '',
+            role: '',
+            status: ''
+        }
+        setRowsData([...rowsData, rowsInput])
+    }
+
+    const handleRowChange = (index, evnt) => {
+        const { name, value } = evnt.target;
+        const rowsInput = [...rowsData];
+        rowsInput[index][name] = value;
+        setRowsData(rowsInput);
+    }
+    const deleteTableRows = (index) => {
+        const rows = [...rowsData];
+        rows.splice(index, 1);
+        setRowsData(rows);
+    }
+
+    //TODO SUbmit User Dta
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(inputValue);
     };
+
+    const option = {
+        "primaryRole":
+            [
+                { value: 'yes', label: 'Yes' },
+                { value: 'no', label: 'No' },
+            ],
+        "roles": [
+            { value: 'admin', label: 'Admin' },
+            { value: 'user', label: 'User' },
+
+        ],
+        "activeStatus": [
+            { value: 'active', label: 'Active' },
+            { value: 'inactive', label: 'Inactive' },
+        ]
+    }
 
     return (
         <>
@@ -57,6 +100,7 @@ const addUser = () => {
                                                 onChange={handleChange}
                                             />
                                         </div>
+
 
                                         <div className='col-md-3'>
                                             <InputField
@@ -109,7 +153,24 @@ const addUser = () => {
                                             />
                                         </div>
                                     </div>
-                                    <div className='row text-center'>
+
+                                    <div className="row">
+                                        <table className="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sl#</th>
+                                                    <th>Primary Role</th>
+                                                    <th>Role</th>
+                                                    <th>Status</th>
+                                                    <th><button className="btn btn-outline-success" onClick={addTableRows} ><AiOutlinePlus /></button></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleRowChange} selectValue={option} />
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div className='row mt-4 center'>
                                         <button type="submit" className="btn btn-primary">Submit</button>
                                     </div>
                                 </form>

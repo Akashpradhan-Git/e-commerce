@@ -1,15 +1,16 @@
-import PageLayout from '../../../components/layout/PageLayout'
-import PageName from '../../../components/page_components/PageName'
-import MainLayout from '../../../components/layout/main'
-import InputField from '../../../components/form-element/InputField'
-import { API_HOST } from '../../../api/api'
+import PageLayout from '../../components/layout/PageLayout'
+import PageName from '../../components/page_components/PageName'
+import MainLayout from '../../components/layout/main'
+import InputField from '../../components/form-element/InputField'
+import { API_HOST } from '../../api/api'
 import Head from 'next/head'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
+import axios from 'axios'
 const singleUser = () => {
     const router = useRouter()
-    const uniqueId = router.query.pid;
+    const uniqueId = router.query.id
     const [inputValue, setInputValue] = useState({
         userid: "",
         fname: "",
@@ -20,6 +21,21 @@ const singleUser = () => {
     });
     const { userid, fname, lname, mobile, email, designation } = inputValue;
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setInputValue((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+    console.log(inputValue);
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     console.log(inputValue);
+    // };
+
+
     const getUniqueUser = async () => {
         try {
             const { data } = await axios.get(`${API_HOST}/1.0/umt/users/${uniqueId}`, {
@@ -28,6 +44,7 @@ const singleUser = () => {
                     Authorization: `Bearer ${JSON.parse(localStorage.getItem('user'))}`
                 }
             })
+
             setInputValue({
                 userid: data.data.userId,
                 fname: data.data.firstName,
@@ -41,23 +58,25 @@ const singleUser = () => {
             console.log(err)
         }
     }
+
     useEffect(() => {
         getUniqueUser()
     }, [])
 
 
+
     return (
         <>
             <Head>
-                <title>View User</title>
+                <title>Edit User</title>
             </Head>
             <PageLayout>
-                <PageName title="View User" />
+                <PageName title="Edit User" />
                 <div className="row">
                     <div className="col-md-12">
                         <div className="card">
                             <div className='card-title'>
-                                <h4>View User</h4>
+                                <h4>Edit User</h4>
                             </div>
                             <div className="card-body">
                                 <form >
@@ -69,8 +88,7 @@ const singleUser = () => {
                                                 placeholder="User Id"
                                                 label="User Id"
                                                 name="userid"
-
-                                                readonly
+                                                onChange={handleChange}
                                             />
                                         </div>
 
@@ -81,8 +99,7 @@ const singleUser = () => {
                                                 placeholder="First Name"
                                                 label="First Name"
                                                 name="fname"
-
-                                                readonly
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className='col-md-3'>
@@ -92,8 +109,7 @@ const singleUser = () => {
                                                 placeholder="Last Name"
                                                 label="Last Name"
                                                 name="lname"
-
-                                                readonly
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className='col-md-3'>
@@ -103,8 +119,7 @@ const singleUser = () => {
                                                 placeholder="Mobile"
                                                 label="Mobile"
                                                 name="mobile"
-
-                                                readonly
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className='col-md-3'>
@@ -114,8 +129,7 @@ const singleUser = () => {
                                                 placeholder="Email"
                                                 label="Email"
                                                 name="email"
-
-                                                readonly
+                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className='col-md-3'>
@@ -125,13 +139,12 @@ const singleUser = () => {
                                                 placeholder="Designation"
                                                 label="Designation"
                                                 name="designation"
-
-                                                readonly
+                                                onChange={handleChange}
                                             />
                                         </div>
                                     </div>
                                     <div className='row center'>
-
+                                        <button type="submit" className="btn btn-sm btn-primary">Submit</button>
                                         <button type="button" className="btn btn-sm btn-dark ml-1" onClick={() => router.back()}>Back</button>
                                     </div>
                                 </form>

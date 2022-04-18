@@ -1,36 +1,46 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
+import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { FaEdit, FaEye, FaLock } from 'react-icons/fa'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 import PageLayout from '../../components/layout/PageLayout'
 import PageName from '../../components/page_components/PageName'
+import { reset } from '../../redux/user/userSlice'
 import MainLayout from '../../components/layout/main'
-import { useSelector, useDispatch } from 'react-redux'
-import { FaEdit, FaEye, FaLock } from 'react-icons/fa'
-import { getUser, reset } from '../../redux/user/userSlice'
-import { toast } from 'react-toastify'
-
 import { API_HOST } from '../../api/api'
-import axios from 'axios'
-import Spinner from '../../components/util/Spinner'
+
+
 const viewUser = () => {
     const dispatch = useDispatch()
-    const { userList, isLoading, isError, isSuccess, message } = useSelector(state => state.usersData)
+    const router = useRouter()
+    const [userList, setUserList] = useState([])
 
-
-    useEffect(() => {
-        if (isError) {
-            console.log(message)
-        }
-        dispatch(getUser())
-        return () => {
-            dispatch(reset())
-        }
-    }, [isError, dispatch])
-
-    if (isLoading) {
-        return <Spinner />
+    const token = null
+    if (typeof window !== 'undefined') {
+        token = JSON.parse(localStorage.getItem('user'));
     }
-    console.log(userList)
-
+    useEffect(() => {
+        if (token !== null) {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+            axios.get(`${API_HOST}/1.0/umt/users/lists`, config)
+                .then(res => {
+                    setUserList(res.data.data.content)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+        else {
+            router.push('/login')
+        }
+        dispatch(reset())
+    }, [token, dispatch])
 
     return (
         <>
@@ -43,7 +53,7 @@ const viewUser = () => {
                     <div className="col-md-12">
                         <div className="card">
                             <div className='card-title'>
-                                <h4>View User</h4>
+                                <h4>View All User</h4>
                             </div>
                             <div className="card-body">
                                 <div className='col-md-12 table-responsive'>
@@ -59,25 +69,30 @@ const viewUser = () => {
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        {/* <tbody>
+                                        <tbody>
                                             {
-                                                user.map((item, index) => {
+                                                userList?.map((item, index) => {
                                                     return (
                                                         <tr key={index}>
                                                             <th scope="row">{index + 1}</th>
-                                                            <td>{item.name}</td>
-                                                            <td>{item.username}</td>
-                                                            <td>{item.phone}</td>
+                                                            <td>{item.userName}</td>
+                                                            <td>{item.userId}</td>
+                                                            <td>{item.mobile}</td>
                                                             <td>{item.email}</td>
-                                                            <td>{item.website}</td>
+                                                            <td>{item.designation}</td>
                                                             <td>
                                                                 <div className="btn-group" role="group" aria-label="Basic example">
-                                                                    <Link href={`/admin/user/${item.id}`} >
+                                                                    <Link href='/admin/[id]' as={`/admin/${item.userId}`}>
                                                                         <a className="btn btn-sm btn-primary">
                                                                             <FaEdit />
                                                                         </a>
                                                                     </Link>
-                                                                    <button type="button" className="btn btn-sm btn-danger"><FaEye /></button>
+
+                                                                    <Link href='/admin/user/[pid]' as={`/admin/user/${item.userId}`}>
+                                                                        <a className="btn btn-sm btn-danger">
+                                                                            <FaEye />
+                                                                        </a>
+                                                                    </Link>
                                                                     <button type="button" className="btn btn-sm btn-success"><FaLock /></button>
                                                                 </div>
                                                             </td>
@@ -86,7 +101,7 @@ const viewUser = () => {
                                                 })
                                             }
 
-                                        </tbody> */}
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>

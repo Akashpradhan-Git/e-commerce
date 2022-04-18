@@ -1,6 +1,7 @@
 import axios from "axios"
 import { API_HOST } from "../../api/api"
 
+
 //* create user 
 const createUser = async (userData, token) => {
     const config = {
@@ -13,8 +14,7 @@ const createUser = async (userData, token) => {
 }
 
 
-
-// Get user goals
+// Get user list
 const getUser = async (token) => {
     const config = {
         headers: {
