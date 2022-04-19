@@ -45,11 +45,12 @@ const singleUser = () => {
         getUniqueUser()
     }, [])
 
-
     return (
         <>
             <Head>
-                <title>View User</title>
+                <title>View Single User</title>
+                <meta name="description" content="View Single user in e-commerces application" />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
             <PageLayout>
                 <PageName title="View User" />
@@ -145,4 +146,3 @@ const singleUser = () => {
 }
 singleUser.Layout = MainLayout;
 export default singleUser
-

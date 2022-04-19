@@ -8,9 +8,13 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import Spinner from '../../components/util/Spinner'
+
+
 const singleUser = () => {
     const router = useRouter()
     const uniqueId = router.query.id
+    const [isLoading, setIsLoading] = useState(true)
     const [inputValue, setInputValue] = useState({
         userid: "",
         fname: "",
@@ -29,15 +33,10 @@ const singleUser = () => {
             [name]: value,
         }));
     };
-    console.log(inputValue);
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log(inputValue);
-    // };
-
 
     const getUniqueUser = async () => {
         try {
+
             const { data } = await axios.get(`${API_HOST}/1.0/umt/users/${uniqueId}`, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,8 +52,10 @@ const singleUser = () => {
                 email: data.data.email,
                 designation: data.data.designation,
             })
+            setIsLoading(false)
         }
         catch (err) {
+            setIsLoading(false)
             console.log(err)
         }
     }
@@ -62,14 +63,18 @@ const singleUser = () => {
     useEffect(() => {
         getUniqueUser()
     }, [])
-
+    if (isLoading)
+        return <Spinner />
 
 
     return (
         <>
             <Head>
                 <title>Edit User</title>
+                <meta name="description" content="Edit Single user in e-commerces application" />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
+
             <PageLayout>
                 <PageName title="Edit User" />
                 <div className="row">

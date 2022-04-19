@@ -1,46 +1,82 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
 import { FaEdit, FaEye, FaLock } from 'react-icons/fa'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import useSWR from 'swr'
+import { toast } from 'react-toastify'
 import PageLayout from '../../components/layout/PageLayout'
 import PageName from '../../components/page_components/PageName'
-import { reset } from '../../redux/user/userSlice'
 import MainLayout from '../../components/layout/main'
 import { API_HOST } from '../../api/api'
-
+import Spinner from '../../components/util/Spinner'
 
 const viewUser = () => {
-    const dispatch = useDispatch()
     const router = useRouter()
-    const [userList, setUserList] = useState([])
+    // const [isLoading, setIsLoading] = useState(true)
+    // const [userList, setUserList] = useState([])
 
     const token = null
     if (typeof window !== 'undefined') {
         token = JSON.parse(localStorage.getItem('user'));
     }
+
     useEffect(() => {
-        if (token !== null) {
-            const config = {
+        if (!token) {
+            toast.error("You are not logged in")
+            router.push('/')
+        }
+    }, [token])
+
+    const fetcher = async () => {
+        try {
+            const { data } = await axios.get(`${API_HOST}/1.0/umt/users/lists`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-            axios.get(`${API_HOST}/1.0/umt/users/lists`, config)
-                .then(res => {
-                    setUserList(res.data.data.content)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            return data.data.content
+        } catch (error) {
+            console.log(error)
         }
-        else {
-            router.push('/login')
-        }
-        dispatch(reset())
-    }, [token, dispatch])
+    }
+
+    const { data, error } = useSWR('viewUserData', fetcher);
+
+    if (error) {
+        toast.warn("failed to load")
+    }
+    if (!data) return <Spinner />
+
+
+    //! Please do not delete this comment
+
+    // useEffect(() => {
+    //     if (token !== null) {
+    //         const config = {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //         }
+    //         axios.get(`${API_HOST}/1.0/umt/users/lists`, config)
+    //             .then(res => {
+    //                 setUserList(res.data.data.content)
+    //                 setIsLoading(false);
+    //             })
+    //             .catch(err => {
+    //                 setIsLoading(false);
+    //                 console.log(err)
+    //             })
+    //     }
+    //     else {
+    //         router.push('/login')
+    //     }
+    //     dispatch(reset())
+    // }, [token, dispatch])
+
 
     return (
         <>
@@ -71,7 +107,7 @@ const viewUser = () => {
                                         </thead>
                                         <tbody>
                                             {
-                                                userList?.map((item, index) => {
+                                                data?.map((item, index) => {
                                                     return (
                                                         <tr key={index}>
                                                             <th scope="row">{index + 1}</th>

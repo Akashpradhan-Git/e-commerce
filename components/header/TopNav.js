@@ -20,10 +20,9 @@ const TopNav = () => {
     }
 
     const handleLogout = () => {
-        console.log('logout')
         dispatch(logout())
         dispatch(reset())
-        router.push('/login')
+        router.push('/')
     }
 
     return (

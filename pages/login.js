@@ -69,7 +69,9 @@ const loginUser = () => {
     return (
         <>
             <Head>
-                <title>E-commerces</title>
+                <title>View Users</title>
+                <meta name="description" content="View Users in e-commerces application" />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={style.main}>
                 <div className={style.container} id="container">
