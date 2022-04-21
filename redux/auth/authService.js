@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../config/axiosInstance";
 import { API_HOST } from "../../api/api";
 
 //TODO : To change the  api url please visit the api folder
@@ -8,7 +8,7 @@ console.log(`${API_HOST}`);
 //Login User
 const login = async (userData) => {
     try {
-        const { data } = await axios.post(`${API_HOST}/login`, userData, {
+        const { data } = await axios.post(`/login`, userData, {
             headers: {
                 'Content-Type': 'application/json'
             }

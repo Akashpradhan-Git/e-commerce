@@ -38,8 +38,8 @@ const loginUser = () => {
                 case "admin":
                     router.push("/admin/dashboard")
                     break;
-                case "user":
-                    router.push("/user/dashboard")
+                case "system":
+                    router.push("/admin/addUser")
                     break;
                 default:
                     break;

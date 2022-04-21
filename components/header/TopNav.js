@@ -22,7 +22,7 @@ const TopNav = () => {
     const handleLogout = () => {
         dispatch(logout())
         dispatch(reset())
-        router.push('/')
+        router.replace('/')
     }
 
     return (
