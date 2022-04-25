@@ -8,7 +8,7 @@ import { login, reset } from '../redux/auth/authSlice';
 import { toast } from 'react-toastify';
 import Head from 'next/head';
 import Spinner from '../components/util/Spinner';
-
+import { setUser } from '../redux/userSlice';
 import jwt from 'jsonwebtoken'
 export default function Home() {
   const router = useRouter();
@@ -32,6 +32,7 @@ export default function Home() {
 
     if (user) {
       const role = decodeToken(user)
+      dispatch(setUser(role.sub))
       switch (role.sub) {
         case "admin":
           router.push("/admin/dashboard")

@@ -13,7 +13,6 @@ const login = async (userData) => {
                 'Content-Type': 'application/json'
             }
         });
-        console.log(data.data);
         if (data.data) {
             localStorage.setItem('user', JSON.stringify(data.data));
         }

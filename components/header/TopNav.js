@@ -2,15 +2,17 @@ import React from "react";
 import Image from "next/image";
 import style from '../../styles/custom.module.css'
 import Link from "next/link";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toggleMenu, toggleSideMenu } from '../../redux/menuSlice'
 import { useRouter } from 'next/router';
 import { logout, reset } from '../../redux/auth/authSlice'
-
+import { resetUser } from '../../redux/userSlice'
+import { toast } from "react-toastify";
 
 const TopNav = () => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const { userName } = useSelector(state => state.user);
 
     const menuToggle = () => {
         dispatch(toggleMenu())
@@ -22,7 +24,9 @@ const TopNav = () => {
     const handleLogout = () => {
         dispatch(logout())
         dispatch(reset())
+        dispatch(resetUser())
         router.replace('/')
+        toast.warn("Logout Successfully")
     }
 
     return (
@@ -70,6 +74,9 @@ const TopNav = () => {
                         </li>
                     </ul>
                     <ul className="navbar-nav navbar-nav-right">
+                        <li className="nav-item dropdown mr-1">
+                            <h5>Hello {userName}</h5>
+                        </li>
                         <li className="nav-item dropdown">
                             <a
                                 className="nav-link count-indicator dropdown-toggle"

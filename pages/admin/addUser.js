@@ -9,7 +9,6 @@ import { AiOutlinePlus } from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import axios from '../../config/axiosInstance'
 import "react-datepicker/dist/react-datepicker.css";
-import { API_HOST } from '../../api/api'
 import moment from 'moment'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
@@ -21,6 +20,7 @@ const addUser = () => {
     const [rowsData, setRowsData] = useState([]);
 
     //! User Validation
+    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     const formik = useFormik({
         initialValues: {
             username: "",
@@ -34,7 +34,7 @@ const addUser = () => {
             username: Yup.string().required('Username is required'),
             firstname: Yup.string().required('Firstname is required'),
             lastname: Yup.string().required('Lastname is required'),
-            userMobile: Yup.string().required('Mobile is required'),
+            userMobile: Yup.string().max(10).min(10).matches(phoneRegExp, 'Phone number is not valid').required('Mobile is required'),
             userEmail: Yup.string().email("Field should contain a valid e-mail").required('Email is required'),
             designation: Yup.string().required('Designation is required'),
 
@@ -108,7 +108,7 @@ const addUser = () => {
     }
 
 
-
+    //TODO : Static Table Data --> dynamic Data
     const option = {
         "primaryRole":
             [
@@ -183,6 +183,11 @@ const addUser = () => {
                                                         }
                                                         .react-datepicker__header{
                                                             background: #a278e7b0;
+                                                        }
+                                                        input[type=number]::-webkit-inner-spin-button, 
+                                                        input[type=number]::-webkit-outer-spin-button { 
+                                                        -webkit-appearance: none; 
+                                                        margin: 0; 
                                                         }
                                                        
                                                     `}</style>
@@ -277,35 +282,7 @@ const addUser = () => {
                                 </form>
                             </div>
 
-                            <div className='card-body'>
-                                <div className='row'>
-                                    <div className='col-md-12'>
-                                        <form>
-                                            <div className='col-md-3'>
-                                                <InputField
-                                                    type="text"
-                                                    value={formik.values.uname}
-                                                    placeholder="User Name"
-                                                    label="User Name"
-                                                    name="uname"
-                                                    onChange={formik.handleChange}
-                                                />
-                                            </div>
-                                            <div className='col-md-3'>
-                                                <InputField
-                                                    type="text"
-                                                    value={formik.values.fname}
-                                                    placeholder="User Name"
-                                                    label="User Name"
-                                                    name="fname"
-                                                    onChange={formik.handleChange}
-                                                />
-                                            </div>
-                                            <button type="submit" className="btn btn-primary" onClick={formik.handleSubmit}>Submit</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
