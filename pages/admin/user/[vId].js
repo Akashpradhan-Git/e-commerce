@@ -7,18 +7,11 @@ import Head from 'next/head'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
+import moment from 'moment'
 const singleUser = () => {
     const router = useRouter()
-    const uniqueId = router.query.pid;
-    const [inputValue, setInputValue] = useState({
-        userid: "",
-        fname: "",
-        lname: "",
-        mobile: "",
-        email: "",
-        designation: "",
-    });
-    const { userid, fname, lname, mobile, email, designation } = inputValue;
+    const uniqueId = router.query.vId;
+    const [inputValue, setInputValue] = useState(null);
 
     const getUniqueUser = async () => {
         try {
@@ -28,14 +21,7 @@ const singleUser = () => {
                     Authorization: `Bearer ${JSON.parse(localStorage.getItem('user'))}`
                 }
             })
-            setInputValue({
-                userid: data.data.userId,
-                fname: data.data.firstName,
-                lname: data.data.lastName,
-                mobile: data.data.mobile,
-                email: data.data.email,
-                designation: data.data.designation,
-            })
+            setInputValue(data.data)
         }
         catch (err) {
             console.log(err)
@@ -44,7 +30,7 @@ const singleUser = () => {
     useEffect(() => {
         getUniqueUser()
     }, [])
-
+    console.log(inputValue)
     return (
         <>
             <Head>
@@ -66,11 +52,10 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={userid}
+                                                value={inputValue ? inputValue.userId : ''}
                                                 placeholder="User Id"
                                                 label="User Id"
                                                 name="userid"
-
                                                 readonly
                                             />
                                         </div>
@@ -78,18 +63,28 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={fname}
+                                                value={inputValue ? inputValue.userName : ''}
+                                                placeholder="User Id"
+                                                label="User Id"
+                                                name="userid"
+                                                readonly
+                                            />
+                                        </div>
+
+                                        <div className='col-md-3'>
+                                            <InputField
+                                                type="text"
+                                                value={inputValue ? inputValue.firstName : ''}
                                                 placeholder="First Name"
                                                 label="First Name"
                                                 name="fname"
-
                                                 readonly
                                             />
                                         </div>
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={lname}
+                                                value={inputValue ? inputValue.lastName : ''}
                                                 placeholder="Last Name"
                                                 label="Last Name"
                                                 name="lname"
@@ -99,8 +94,19 @@ const singleUser = () => {
                                         </div>
                                         <div className='col-md-3'>
                                             <InputField
+                                                type="text"
+                                                value={inputValue ? moment(inputValue.dateOfBirth).format('DD/MM/YYYY') : ''}
+                                                placeholder="Date of Birth"
+                                                label="Date of Birth"
+                                                name="dob"
+
+                                                readonly
+                                            />
+                                        </div>
+                                        <div className='col-md-3'>
+                                            <InputField
                                                 type="number"
-                                                value={mobile}
+                                                value={inputValue ? inputValue.mobile : ''}
                                                 placeholder="Mobile"
                                                 label="Mobile"
                                                 name="mobile"
@@ -111,7 +117,7 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="email"
-                                                value={email}
+                                                value={inputValue ? inputValue.email : ''}
                                                 placeholder="Email"
                                                 label="Email"
                                                 name="email"
@@ -122,7 +128,7 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={designation}
+                                                value={inputValue ? inputValue.designation : ''}
                                                 placeholder="Designation"
                                                 label="Designation"
                                                 name="designation"

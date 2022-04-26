@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PageLayout from '../../components/layout/PageLayout'
 import PageName from '../../components/page_components/PageName'
 import MainLayout from '../../components/layout/main'
@@ -13,11 +13,12 @@ import moment from 'moment'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import useFetch from '../../api/useFetch'
 
 
 const addUser = () => {
     const [dateOfbirth, setdateOfbirth] = useState("");
-    const [rowsData, setRowsData] = useState([]);
+    const [rowsData, setRowsData] = useState([]); // table rows data
 
     //! User Validation
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -66,11 +67,19 @@ const addUser = () => {
 
     function submitData(values) {
         const dateOfbirth = moment(dateOfbirth).format('DD/MM/YYYY').toString();
-        const tArray = {
-            "isPrimary": [1],
-            "roleId": [1]
-        }
-        const formData = { ...values, dateOfbirth, ...tArray }
+        let isPrimary = [];
+        let roleId = [];
+
+        rowsData.forEach(element => {
+            console.log(element)
+            isPrimary.push(
+                element.isPrimary,
+            )
+            roleId.push(
+                element.roleId,
+            )
+        });
+        const formData = { ...values, dateOfbirth, isPrimary, roleId }
         return formData
     }
 
@@ -88,8 +97,8 @@ const addUser = () => {
     const addTableRows = () => {
 
         const rowsInput = {
-            pRole: '',
-            role: '',
+            isPrimary: '',
+            roleId: '',
             status: ''
         }
         setRowsData([...rowsData, rowsInput])
@@ -108,23 +117,10 @@ const addUser = () => {
     }
 
 
-    //TODO : Static Table Data --> dynamic Data
-    const option = {
-        "primaryRole":
-            [
-                { value: 'yes', label: 'Yes' },
-                { value: 'no', label: 'No' },
-            ],
-        "roles": [
-            { value: 'admin', label: 'Admin' },
-            { value: 'user', label: 'User' },
+    //TODO : Get Role Data from API and Pass to Dynamic Select Field
+    const token = getToken();
+    const [data] = useFetch('http://localhost:8050/e-commerce/api/1.0/umt/roles/', token);
 
-        ],
-        "activeStatus": [
-            { value: 'active', label: 'Active' },
-            { value: 'inactive', label: 'Inactive' },
-        ]
-    }
     return (
         <>
             <Head>
@@ -204,7 +200,6 @@ const addUser = () => {
                                                 onBlur={formik.handleBlur}
                                                 error={formik.errors.firstname && formik.touched.firstname ? formik.errors.firstname : null}
                                             />
-
                                         </div>
                                         <div className='col-md-3'>
                                             <InputField
@@ -272,7 +267,7 @@ const addUser = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleRowChange} selectValue={option} />
+                                                <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleRowChange} selectValue={data} />
                                             </tbody>
                                         </table>
                                     </div>

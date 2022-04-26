@@ -1,47 +1,84 @@
 import { AiOutlineDelete } from "react-icons/ai";
-const TableRows = ({ rowsData, deleteTableRows, handleChange, selectValue }) => {
+const TableRows = ({ rowsData, deleteTableRows, handleChange, selectValue, isEdit = false }) => {
     return (
         rowsData.map((data, index) => {
             const { pRole, role, status } = data;
-            const { primaryRole, roles, activeStatus } = selectValue;
+            // const { primaryRole, roles, activeStatus } = selectValue;
+
             return (
                 <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>
-                        <select name="pRole" value={pRole} onChange={(evnt) => (handleChange(index, evnt))} className="form-control">
-                            {
-                                primaryRole.map((data, index) => {
-                                    return (
-                                        <option key={index} value={data.value}>{data.label}</option>
-                                    )
-                                })
-                            }
-                        </select>
-                        {/* <input type="text" value={fullName} onChange={(evnt) => (handleChange(index, evnt))} name="fullName" className="form-control" /> */}
-                    </td>
-                    <td>
-                        <select name="role" value={role} onChange={(evnt) => (handleChange(index, evnt))} className="form-control">
-                            {
-                                roles.map((data, index) => {
-                                    return (
-                                        <option key={index} value={data.value}>{data.label}</option>
-                                    )
-                                })
-                            }
-                        </select>
-                    </td>
-                    <td>
-                        <select name="status" value={status} onChange={(evnt) => (handleChange(index, evnt))} className="form-control">
-                            {
-                                activeStatus.map((data, index) => {
-                                    return (
-                                        <option key={index} value={data.value}>{data.label}</option>
-                                    )
-                                })
-                            }
-                        </select>
-                    </td>
-                    <td><button className="btn btn-outline-danger" onClick={() => (deleteTableRows(index))}><AiOutlineDelete /></button></td>
+                    {!isEdit ?
+                        <>
+                            <td>{index + 1}</td>
+                            <td>
+                                <select name="roleId" value={role} onChange={(evnt) => (handleChange(index, evnt))} className="form-control">
+                                    <option value="Select"> --Select--</option>
+                                    <option value="1"> Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="isPrimary" value={pRole} onChange={(evnt) => (handleChange(index, evnt))} className="form-control">
+                                    <option value="Select"> --Select--</option>
+                                    {
+                                        selectValue.map((data, index) => {
+                                            return (
+                                                <option key={index} value={data.roleId}>{data.displayName}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </td>
+
+                            <td>
+                                <select name="status" disabled value={status} onChange={(evnt) => (handleChange(index, evnt))} className="form-control">
+
+                                    {
+                                        selectValue.map((data, index) => {
+                                            return (
+                                                <option key={index} value={data.isActive}>{data.isActive ? "true" : "False"}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </td>
+                            <td><button className="btn btn-outline-danger" onClick={() => (deleteTableRows(index))}><AiOutlineDelete /></button></td>
+                        </>
+                        :
+                        <>
+                            <td>{index + 1}</td>
+                            <td>
+                                <select name="roleId" value={role} onChange={(evnt) => (handleChange(index, evnt))} className="form-control">
+                                    <option value="Select"> --Select--</option>
+                                    <option value="1"> Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="isPrimary" value={pRole} onChange={(evnt) => (handleChange(index, evnt))} className="form-control">
+                                    <option value="Select"> --Select--</option>
+                                    {
+                                        selectValue.map((data, index) => {
+                                            return (
+                                                <option key={index} value={data.roleId} defaultValue>{data.displayName}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <select name="status" disabled value={status} onChange={(evnt) => (handleChange(index, evnt))} className="form-control">
+                                    {
+                                        selectValue.map((data, index) => {
+                                            return (
+                                                <option key={index} value={data.isActive}>{data.isActive ? "True" : "False"}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </td>
+                            <td><button className="btn btn-outline-danger" onClick={() => (deleteTableRows(index))}><AiOutlineDelete /></button></td>
+                        </>}
                 </tr>
             )
         })

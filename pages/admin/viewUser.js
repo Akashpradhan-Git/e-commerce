@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import axios from 'axios'
 import { FaEdit, FaEye, FaLock } from 'react-icons/fa'
@@ -11,11 +11,14 @@ import PageName from '../../components/page_components/PageName'
 import MainLayout from '../../components/layout/main'
 import { API_HOST } from '../../api/api'
 import Spinner from '../../components/util/Spinner'
-
+import Pagination from '../../components/pagination/Pagination'
 const viewUser = () => {
     const router = useRouter()
     // const [isLoading, setIsLoading] = useState(true)
     // const [userList, setUserList] = useState([])
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(10);
 
     const token = null
     if (typeof window !== 'undefined') {
@@ -50,6 +53,21 @@ const viewUser = () => {
         toast.warn("failed to load")
     }
     if (!data) return <Spinner />
+
+
+
+    // ! Pegination
+
+
+
+
+    // Get current posts
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = data.slice(indexOfFirstPost, indexOfLastPost);
+
+    // Change page
+    const paginate = pageNumber => setCurrentPage(pageNumber);
 
 
     //! Please do not delete this comment
@@ -107,7 +125,7 @@ const viewUser = () => {
                                         </thead>
                                         <tbody>
                                             {
-                                                data?.map((item, index) => {
+                                                currentPosts?.map((item, index) => {
                                                     return (
                                                         <tr key={index}>
                                                             <th scope="row">{index + 1}</th>
@@ -124,7 +142,7 @@ const viewUser = () => {
                                                                         </a>
                                                                     </Link>
 
-                                                                    <Link href='/admin/user/[pid]' as={`/admin/user/${item.userId}`}>
+                                                                    <Link href='/admin/user/[vId]' as={`/admin/user/${item.userId}`}>
                                                                         <a className="btn btn-sm btn-danger">
                                                                             <FaEye />
                                                                         </a>
@@ -139,6 +157,12 @@ const viewUser = () => {
 
                                         </tbody>
                                     </table>
+
+                                    <Pagination
+                                        postsPerPage={postsPerPage}
+                                        totalPosts={data.length}
+                                        paginate={paginate}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -151,5 +175,8 @@ const viewUser = () => {
 viewUser.Layout = MainLayout;
 
 export default viewUser
+
+
+
 
 

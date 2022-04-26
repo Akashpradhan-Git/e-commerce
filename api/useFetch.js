@@ -1,37 +1,23 @@
-//useFetch.js
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from "axios";
+import { useState, useEffect } from "react";
 
-function useFetch(url, token = "") {
+const useFetch = (url, token) => {
     const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(null);
-    const [error, setError] = useState(null);
-
+    const option = {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    };
     useEffect(() => {
-        setLoading('loading...')
-        setData(null);
-        setError(null);
-        axios.get(url,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            },
-        )
+        axios.get(url, option)
             .then(res => {
-                setLoading(false);
-                //checking for multiple responses for more flexibility 
-                //with the url we send in.
-                res.data.content && setData(res.data.content);
-                res.content && setData(res.content);
+                setData(res.data.data);
+            }).catch(err => {
+                console.log(err);
             })
-            .catch(err => {
-                setLoading(false)
-                setError('An error occurred. Awkward..')
-            })
+    }, [url]);
+    return [data];
+};
 
-    }, [url])
-
-    return { data, loading, error }
-}
 export default useFetch;
