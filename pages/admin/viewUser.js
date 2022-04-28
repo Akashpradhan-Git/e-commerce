@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
-import { FaEdit, FaEye, FaLock } from 'react-icons/fa'
+import { FaEdit, FaEye } from 'react-icons/fa'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
@@ -95,7 +95,7 @@ const viewUser = () => {
                                                                         </a>
                                                                     </Link>
 
-                                                                    <Link href='/admin/user/[vId]' as={`/admin/user/${item.userId}`}>
+                                                                    <Link href='/admin/user/[userId]' as={`/admin/user/${item.userId}`}>
                                                                         <a className="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="View">
                                                                             <FaEye />
                                                                         </a>

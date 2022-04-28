@@ -12800,6 +12800,7 @@ fieldset:disabled .wizard>.actions a,
 .btn-outline-success:disabled,
 .editable-container.editable-inline .editableform .control-group .editable-buttons .editable-submit:disabled {
   color: #57B657;
+  pointer-events: none;
   background-color: transparent;
 }
 

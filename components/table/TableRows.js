@@ -1,10 +1,14 @@
 import { AiOutlineDelete } from "react-icons/ai";
 const TableRows = ({ rowsData, deleteTableRows, handleChange, selectValue, isEdit = false }) => {
+    console.log(rowsData);
     return (
         rowsData?.map((data, index) => {
             const { pRole, role, status } = data;
-            // const { primaryRole, roles, activeStatus } = selectValue;
+            const { roleId, userRoleId } = data ? data : ""
 
+            console.log("+++++", roleId, userRoleId)
+            // const { primaryRole, roles, activeStatus } = selectValue;
+            console.log(isEdit, "isEdit")
             return (
                 <tr key={index}>
                     {!isEdit ?
@@ -23,7 +27,7 @@ const TableRows = ({ rowsData, deleteTableRows, handleChange, selectValue, isEdi
                                     {
                                         selectValue.map((data, index) => {
                                             return (
-                                                <option key={index} value={data.roleId}>{data.displayName}</option>
+                                                <option key={index} value={data.roleId} >{data.displayName}</option>
                                             )
                                         })
                                     }
@@ -60,7 +64,7 @@ const TableRows = ({ rowsData, deleteTableRows, handleChange, selectValue, isEdi
                                     {
                                         selectValue.map((data, index) => {
                                             return (
-                                                <option key={index} value={data.roleId} defaultValue>{data.displayName}</option>
+                                                <option key={index} value={data.roleId} selected={data.roleId == userRoleId ? "selected" : ""}>{data.displayName}</option>
                                             )
                                         })
                                     }

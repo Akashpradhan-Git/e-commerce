@@ -1,17 +1,17 @@
-import PageLayout from '../../../components/layout/PageLayout'
-import PageName from '../../../components/page_components/PageName'
-import MainLayout from '../../../components/layout/main'
-import InputField from '../../../components/form-element/InputField'
+import PageLayout from '../../../../components/layout/PageLayout'
+import PageName from '../../../../components/page_components/PageName'
+import MainLayout from '../../../../components/layout/main'
+import InputField from '../../../../components/form-element/InputField'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import moment from 'moment'
 import { useQuery } from 'react-query'
-import * as api from '../../../api/usersApi'
-import Spinner from '../../../components/util/Spinner'
+import * as api from '../../../../api/usersApi'
+import Spinner from '../../../../components/util/Spinner'
 
 const singleUser = () => {
     const router = useRouter()
-    const uniqueId = router.query.vId;
+    const uniqueId = router.query.userId;
 
     const { isLoading, isError, data } = useQuery(['/umt/users/', uniqueId], () => api.getUserById(uniqueId))
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PageLayout from '../../components/layout/PageLayout'
 import PageName from '../../components/page_components/PageName'
 import MainLayout from '../../components/layout/main'
@@ -7,19 +7,20 @@ import Head from 'next/head'
 import TableRows from '../../components/table/TableRows'
 import { AiOutlinePlus } from "react-icons/ai";
 import DatePicker from "react-datepicker";
-import axios from '../../config/axiosInstance'
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useFetch from '../../api/useFetch'
+import * as api from '../../api/usersApi'
+import Spinner from '../../components/util/Spinner'
 
 //! FIXME Use React mutation hook
 const addUser = () => {
     const [dateOfbirth, setdateOfbirth] = useState("");
     const [rowsData, setRowsData] = useState([]); // table rows data
-
+    const [isLoading, setIsLoading] = useState(false); // loading state
     //! User Validation
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     const formik = useFormik({
@@ -42,25 +43,17 @@ const addUser = () => {
         }),
         onSubmit: async values => {
             const formData = submitData(values)
-            const token = getToken()
-            try {
-                let { data } = await axios.post('/1.0/umt/users/save', formData,
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
+            setIsLoading(true)
+            const response = await api.saveUser(formData)
 
-                if (data.outcome === true) {
-                    toast.success("User Added Successfully")
-                }
-                else {
-                    toast.error("User Not Added")
-                    console.log(data)
-                }
-            } catch (error) {
-                console.log(error)
+            if (response.outcome === true) {
+                toast.success("User Added Successfully")
+                setIsLoading(false)
+            }
+            else {
+                toast.error("User Not Added")
+                console.log(data)
+                setIsLoading(false)
             }
         },
     });
@@ -120,6 +113,8 @@ const addUser = () => {
     //TODO : Get Role Data from API and Pass to Dynamic Select Field
     const token = getToken();
     const [data] = useFetch('http://localhost:8050/e-commerce/api/1.0/umt/roles/', token);
+
+    if (isLoading) return <Spinner />
 
     return (
         <>

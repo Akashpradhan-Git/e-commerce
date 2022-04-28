@@ -14,16 +14,12 @@ import moment from 'moment'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify'
-
-import { useQuery } from 'react-query'
-
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import * as api from '../../api/usersApi'
 import { useEffect } from 'react'
-
-import getToken from '../../config/getToken';
-
+import getToken from '../../config/getToken'
+import useFetch from '../../api/useFetch'
 
 
 const singleUser = () => {
@@ -32,7 +28,7 @@ const singleUser = () => {
     const uniqueId = router.query.id;
     const [rowsData, setRowsData] = useState([]); // table rows data
     const [dateOfbirth, setdateOfbirth] = useState(null);
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const [inputValue, setInputValue] = useState({
         userName: "",
         firstName: "",
@@ -51,6 +47,7 @@ const singleUser = () => {
 
     const getUserById = async () => {
         try {
+            setIsLoading(true)
             const data = await api.getUserById(uniqueId)
             setInputValue({
                 userName: data.data.userName,
@@ -59,10 +56,10 @@ const singleUser = () => {
                 mobile: data.data.mobile,
                 email: data.data.email,
                 designation: data.data.designation,
-                role: data.data.role
+                role: data.data.primaryRole
             })
             setdateOfbirth(data.data.dateOfBirth)
-            setRowsData(data.data.role)
+            setRowsData(data?.data.userRoleMap)
             setIsLoading(false)
         }
         catch (err) {
@@ -70,6 +67,7 @@ const singleUser = () => {
             console.log(err)
         }
     }
+
 
     //! User Validation
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -96,16 +94,19 @@ const singleUser = () => {
 
         onSubmit: async values => {
             const formData = submitData(values)
-            console.log("form", formData)
+            console.log(formData)
             try {
+                setIsLoading(true)
                 const data = await api.updateUser(uniqueId, formData)
                 console.log(data)
 
-                if (data !== null) {
+                if (data.outcome) {
+                    setIsLoading(false)
                     toast.success("User Updated Successfully")
                     router.push('/admin/viewUser')
                 }
                 else {
+                    setIsLoading(false)
                     toast.error(data.message)
                 }
             }
@@ -116,11 +117,8 @@ const singleUser = () => {
     });
 
     // ! Update User
-
     function submitData(values) {
         const { dob, ...rest } = { ...values }
-
-
         const dateOfbirth = dateOfbirth ? moment(dateOfbirth).format('DD/MM/YYYY').toString() : moment(dob).format('DD/MM/YYYY').toString()
 
         let isPrimary = [];
@@ -129,75 +127,25 @@ const singleUser = () => {
         rowsData.forEach(element => {
             console.log(element)
             isPrimary.push(
-                element.isPrimary,
+                parseInt(element.isPrimary),
             )
             roleId.push(
-                element.roleId,
+                parseInt(element.roleId),
             )
         });
         const formData = { ...rest, dateOfbirth, isPrimary, roleId }
         return formData
     }
 
-    // if (data?.data.role.length > 0) {
-    //     const { role } = data.data
-    //     setRowsData(role)
-    //     return
-    // }
-
-    //TODO : Update User with its ID
-    // const updateUser = async (e) => {
-    //     e.preventDefault();
-    //     setIsLoading(true)
-    //     const updateData = submitData()
-
-    //     const dataSubmit = {
-    //         isPrimary: updateData.isPrimary,
-    //         roleId: updateData.roleId,
-    //         username: updateData.userName,
-    //         firstname: updateData.firstName,
-    //         lastname: updateData.lastName,
-    //         userMobile: updateData.mobile,
-    //         userEmail: updateData.email,
-    //         dateOfbirth: moment(dateOfbirth).format('DD/MM/YYYY').toString(),
-    //         designation: updateData.designation
-    //     }
-    //     try {
-    //         const { data } = await axios.post(`${API_HOST}/1.0/umt/users/save`, dataSubmit, {
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('user'))}`
-    //             }
-    //         })
-
-    //         if (!data.outcome) return false
-
-    //         setIsLoading(false)
-    //         toast.success('User Updated Succesfully');
-    //         router.push('/admin/viewUser');
-    //     }
-    //     catch (err) {
-    //         setIsLoading(false)
-    //         console.log(err)
-    //     }
-    // }
-
-
-
-
     //TODO Dynamic Table Rows
-
-
-
     const addTableRows = () => {
         const rowsInput = {
-            isPrimary: null,
-            roleId: null,
-            status: null
+            isPrimary: "",
+            roleId: "",
+            status: "",
         }
         setRowsData([...rowsData, rowsInput])
     }
-
 
     const handleRowChange = (index, evnt) => {
         const { name, value } = evnt.target;
@@ -211,11 +159,12 @@ const singleUser = () => {
         setRowsData(rows);
     }
 
+    //TODO : Get Role Data from API and Pass to Dynamic Select Field
+    const token = getToken();
+    const [data] = useFetch('/1.0/umt/roles/', token);
+
     if (isLoading)
         return <Spinner />
-
-    // if (isError)
-    //     router.push('/')
 
     return (
         <>
@@ -359,11 +308,11 @@ const singleUser = () => {
                                                     <th>Primary Role</th>
                                                     <th>Role</th>
                                                     <th>Status</th>
-                                                    <th><button className="btn btn-outline-success" type='button' onClick={addTableRows} ><AiOutlinePlus /></button></th>
+                                                    <th><button className={`btn btn-outline-success ${role == null ? "disabled" : ""}`} type='button' onClick={addTableRows}  ><AiOutlinePlus /></button></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleRowChange} selectValue={role !== null ? role : []} isEdit={true} />
+                                                <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleRowChange} selectValue={data} isEdit={true} />
                                             </tbody>
                                         </table>
                                     </div>

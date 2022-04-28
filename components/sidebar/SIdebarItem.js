@@ -38,7 +38,7 @@ const SIdebarItem = () => {
             {
 
                 name: "Role List",
-                url: "/admin/role-list",
+                url: "/admin/roleList",
                 isParents: false,
             },
 
