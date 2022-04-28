@@ -4,10 +4,10 @@ import MainLayout from '../../components/layout/main'
 import InputField from '../../components/form-element/InputField'
 import { API_HOST } from '../../api/api'
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { AiOutlinePlus } from "react-icons/ai";
-import axios from 'axios'
+import axios from '../../config/axiosInstance'
 import Spinner from '../../components/util/Spinner'
 import TableRows from '../../components/table/TableRows'
 import moment from 'moment'
@@ -15,12 +15,23 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify'
 
+import { useQuery } from 'react-query'
+
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import * as api from '../../api/usersApi'
+import { useEffect } from 'react'
+
+import getToken from '../../config/getToken';
+
+
+
 const singleUser = () => {
+
     const router = useRouter()
     const uniqueId = router.query.id;
     const [rowsData, setRowsData] = useState([]); // table rows data
-    const [dateOfbirth, setdateOfbirth] = useState("");
-
+    const [dateOfbirth, setdateOfbirth] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
     const [inputValue, setInputValue] = useState({
         userName: "",
@@ -33,25 +44,14 @@ const singleUser = () => {
     });
     const { userName, firstName, lastName, mobile, email, designation, role } = inputValue;
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    // * : Get Unique User
+    useEffect(() => {
+        getUserById()
+    }, [])
 
-        setInputValue((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
-
-    const getUniqueUser = async () => {
+    const getUserById = async () => {
         try {
-
-            const { data } = await axios.get(`${API_HOST}/1.0/umt/users/edit/${uniqueId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${JSON.parse(localStorage.getItem('user'))}`
-                }
-            })
-            console.log(data)
+            const data = await api.getUserById(uniqueId)
             setInputValue({
                 userName: data.data.userName,
                 firstName: data.data.firstName,
@@ -71,54 +71,63 @@ const singleUser = () => {
         }
     }
 
-    useEffect(() => {
-        getUniqueUser()
-    }, [])
+    //! User Validation
+    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            username: userName ? userName : '',
+            firstname: firstName ? firstName : '',
+            lastname: lastName ? lastName : '',
+            userMobile: mobile ? mobile : '',
+            userEmail: email ? email : '',
+            designation: designation ? designation : '',
+            dob: dateOfbirth ? dateOfbirth : '',
+        },
+        validationSchema: Yup.object({
+            username: Yup.string().required('Username is required'),
+            firstname: Yup.string().required('Firstname is required'),
+            lastname: Yup.string().required('Lastname is required'),
+            userMobile: Yup.string().max(10).min(10).matches(phoneRegExp, 'Phone number is not valid').required('Mobile is required'),
+            userEmail: Yup.string().email("Field should contain a valid e-mail").required('Email is required'),
+            designation: Yup.string().required('Designation is required'),
 
-    //TODO : Update User with its ID
-    const updateUser = async (e) => {
-        e.preventDefault();
-        setIsLoading(true)
-        const updateData = submitData()
+        }),
 
-        const dataSubmit = {
-            isPrimary: updateData.isPrimary,
-            roleId: updateData.roleId,
-            username: updateData.userName,
-            firstname: updateData.firstName,
-            lastname: updateData.lastName,
-            userMobile: updateData.mobile,
-            userEmail: updateData.email,
-            dateOfbirth: moment(dateOfbirth).format('DD/MM/YYYY').toString(),
-            designation: updateData.designation
-        }
-        try {
-            const { data } = await axios.post(`${API_HOST}/1.0/umt/users/save`, dataSubmit, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${JSON.parse(localStorage.getItem('user'))}`
+        onSubmit: async values => {
+            const formData = submitData(values)
+            console.log("form", formData)
+            try {
+                const data = await api.updateUser(uniqueId, formData)
+                console.log(data)
+
+                if (data !== null) {
+                    toast.success("User Updated Successfully")
+                    router.push('/admin/viewUser')
                 }
-            })
+                else {
+                    toast.error(data.message)
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+        },
+    });
 
-            if (!data.outcome) return false
+    // ! Update User
 
-            setIsLoading(false)
-            toast.success('User Updated Succesfully');
-            router.push('/admin/viewUser');
-        }
-        catch (err) {
-            setIsLoading(false)
-            console.log(err)
-        }
-    }
+    function submitData(values) {
+        const { dob, ...rest } = { ...values }
 
-    //TODO : Submit Data Function
-    function submitData() {
-        // const dateOfbirth = moment(dateOfbirth).format('DD/MM/YYYY').toString();
+
+        const dateOfbirth = dateOfbirth ? moment(dateOfbirth).format('DD/MM/YYYY').toString() : moment(dob).format('DD/MM/YYYY').toString()
+
         let isPrimary = [];
         let roleId = [];
-        const { role, ...updateData } = { ...inputValue }
+
         rowsData.forEach(element => {
+            console.log(element)
             isPrimary.push(
                 element.isPrimary,
             )
@@ -126,12 +135,60 @@ const singleUser = () => {
                 element.roleId,
             )
         });
-        const formData = { ...updateData, isPrimary, roleId }
+        const formData = { ...rest, dateOfbirth, isPrimary, roleId }
         return formData
     }
 
+    // if (data?.data.role.length > 0) {
+    //     const { role } = data.data
+    //     setRowsData(role)
+    //     return
+    // }
+
+    //TODO : Update User with its ID
+    // const updateUser = async (e) => {
+    //     e.preventDefault();
+    //     setIsLoading(true)
+    //     const updateData = submitData()
+
+    //     const dataSubmit = {
+    //         isPrimary: updateData.isPrimary,
+    //         roleId: updateData.roleId,
+    //         username: updateData.userName,
+    //         firstname: updateData.firstName,
+    //         lastname: updateData.lastName,
+    //         userMobile: updateData.mobile,
+    //         userEmail: updateData.email,
+    //         dateOfbirth: moment(dateOfbirth).format('DD/MM/YYYY').toString(),
+    //         designation: updateData.designation
+    //     }
+    //     try {
+    //         const { data } = await axios.post(`${API_HOST}/1.0/umt/users/save`, dataSubmit, {
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 Authorization: `Bearer ${JSON.parse(localStorage.getItem('user'))}`
+    //             }
+    //         })
+
+    //         if (!data.outcome) return false
+
+    //         setIsLoading(false)
+    //         toast.success('User Updated Succesfully');
+    //         router.push('/admin/viewUser');
+    //     }
+    //     catch (err) {
+    //         setIsLoading(false)
+    //         console.log(err)
+    //     }
+    // }
+
+
+
 
     //TODO Dynamic Table Rows
+
+
+
     const addTableRows = () => {
         const rowsInput = {
             isPrimary: null,
@@ -157,6 +214,8 @@ const singleUser = () => {
     if (isLoading)
         return <Spinner />
 
+    // if (isError)
+    //     router.push('/')
 
     return (
         <>
@@ -180,32 +239,38 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={userName}
+                                                value={formik.values.username}
                                                 placeholder="User Name"
                                                 label="User Name"
-                                                name="userName"
-                                                onChange={handleChange}
+                                                name="username"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={formik.errors.username && formik.touched.username ? formik.errors.username : null}
                                             />
                                         </div>
 
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={firstName}
+                                                value={formik.values.firstname}
                                                 placeholder="First Name"
                                                 label="First Name"
-                                                name="firstName"
-                                                onChange={handleChange}
+                                                name="firstname"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={formik.errors.firstname && formik.touched.firstname ? formik.errors.firstname : null}
                                             />
                                         </div>
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={lastName}
+                                                value={formik.values.lastname}
                                                 placeholder="Last Name"
                                                 label="Last Name"
-                                                name="lastName"
-                                                onChange={handleChange}
+                                                name="lastname"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={formik.errors.lastname && formik.touched.lastname ? formik.errors.lastname : null}
                                             />
                                         </div>
 
@@ -213,19 +278,18 @@ const singleUser = () => {
                                             <div className="form-group">
                                                 <label htmlFor="input-field">Date of Birth</label>
                                                 <DatePicker
-                                                    selected={dateOfbirth}
+                                                    selected={dateOfbirth ? dateOfbirth : formik.values.dob}
                                                     onChange={(date) => setdateOfbirth(date)}
                                                     peekNextMonth
                                                     showMonthDropdown
                                                     showYearDropdown
+                                                    maxDate={new Date()}
                                                     dropdownMode="select"
                                                     className="form-control form-control-sm"
                                                     placeholderText="dd/MM/yyyy"
                                                     dateFormat="dd/MM/yyyy"
                                                     name='dateOfbirth'
-
                                                 />
-
                                                 <style global jsx>{`
                                                         .react-datepicker__month-select,
                                                         .react-datepicker__year-select{
@@ -253,31 +317,37 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="number"
-                                                value={mobile}
+                                                value={formik.values.userMobile}
                                                 placeholder="Mobile"
                                                 label="Mobile"
-                                                name="mobile"
-                                                onChange={handleChange}
+                                                name="userMobile"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={formik.errors.userMobile && formik.touched.userMobile ? formik.errors.userMobile : null}
                                             />
                                         </div>
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="email"
-                                                value={email}
+                                                value={formik.values.userEmail}
                                                 placeholder="Email"
                                                 label="Email"
-                                                name="email"
-                                                onChange={handleChange}
+                                                name="userEmail"
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={formik.errors.userEmail && formik.touched.userEmail ? formik.errors.userEmail : null}
                                             />
                                         </div>
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={designation}
+                                                value={formik.values.designation}
                                                 placeholder="Designation"
                                                 label="Designation"
                                                 name="designation"
-                                                onChange={handleChange}
+                                                onChange={formik.handleChange}
+                                                onBlur={formik.handleBlur}
+                                                error={formik.errors.designation && formik.touched.designation ? formik.errors.designation : null}
                                             />
                                         </div>
                                     </div>
@@ -293,12 +363,12 @@ const singleUser = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleRowChange} selectValue={role} isEdit={true} />
+                                                <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleRowChange} selectValue={role !== null ? role : []} isEdit={true} />
                                             </tbody>
                                         </table>
                                     </div>
                                     <div className='row center'>
-                                        <button type="submit" className="btn btn-sm btn-primary" onClick={updateUser}>Update</button>
+                                        <button type="submit" className="btn btn-sm btn-primary" onClick={formik.handleSubmit}>Update</button>
                                         <button type="button" className="btn btn-sm btn-dark ml-1" onClick={() => router.back()}>Back</button>
                                     </div>
                                 </form>

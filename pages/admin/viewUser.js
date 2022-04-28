@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
-import axios from 'axios'
 import { FaEdit, FaEye, FaLock } from 'react-icons/fa'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import useSWR from 'swr'
 import { toast } from 'react-toastify'
 import PageLayout from '../../components/layout/PageLayout'
 import PageName from '../../components/page_components/PageName'
 import MainLayout from '../../components/layout/main'
-import { API_HOST } from '../../api/api'
 import Spinner from '../../components/util/Spinner'
 import Pagination from '../../components/pagination/Pagination'
+import getToken from '../../config/getToken'
+import * as api from '../../api/usersApi'
+import { useQuery } from 'react-query'
+
+
 const viewUser = () => {
     const router = useRouter()
-    // const [isLoading, setIsLoading] = useState(true)
-    // const [userList, setUserList] = useState([])
-
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(10);
 
-    const token = null
-    if (typeof window !== 'undefined') {
-        token = JSON.parse(localStorage.getItem('user'));
-    }
-
+    //* Get token from localStorage and if not present then redirect to login page
+    const token = getToken()
     useEffect(() => {
         if (!token) {
             toast.error("You are not logged in")
@@ -32,34 +28,17 @@ const viewUser = () => {
         }
     }, [token])
 
-    const fetcher = async () => {
-        try {
-            const { data } = await axios.get(`${API_HOST}/1.0/umt/users/lists`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            })
 
-            return data.data.content
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //* Get user list
+    const { isLoading, isError, data } = useQuery('/users/lists', api.getUsersList, { keepPreviousData: true, })
 
-    const { data, error } = useSWR('viewUserData', fetcher);
-
-    if (error) {
+    if (isError) {
         toast.warn("failed to load")
     }
-    if (!data) return <Spinner />
 
-
+    if (isLoading) return <Spinner />
 
     // ! Pegination
-
-
-
 
     // Get current posts
     const indexOfLastPost = currentPage * postsPerPage;
@@ -68,32 +47,6 @@ const viewUser = () => {
 
     // Change page
     const paginate = pageNumber => setCurrentPage(pageNumber);
-
-
-    //! Please do not delete this comment
-
-    // useEffect(() => {
-    //     if (token !== null) {
-    //         const config = {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //         }
-    //         axios.get(`${API_HOST}/1.0/umt/users/lists`, config)
-    //             .then(res => {
-    //                 setUserList(res.data.data.content)
-    //                 setIsLoading(false);
-    //             })
-    //             .catch(err => {
-    //                 setIsLoading(false);
-    //                 console.log(err)
-    //             })
-    //     }
-    //     else {
-    //         router.push('/login')
-    //     }
-    //     dispatch(reset())
-    // }, [token, dispatch])
 
 
     return (
@@ -137,17 +90,16 @@ const viewUser = () => {
                                                             <td>
                                                                 <div className="btn-group" role="group" aria-label="Basic example">
                                                                     <Link href='/admin/[id]' as={`/admin/${item.userId}`}>
-                                                                        <a className="btn btn-sm btn-primary">
+                                                                        <a className="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Edit">
                                                                             <FaEdit />
                                                                         </a>
                                                                     </Link>
 
                                                                     <Link href='/admin/user/[vId]' as={`/admin/user/${item.userId}`}>
-                                                                        <a className="btn btn-sm btn-danger">
+                                                                        <a className="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="View">
                                                                             <FaEye />
                                                                         </a>
                                                                     </Link>
-                                                                    <button type="button" className="btn btn-sm btn-success"><FaLock /></button>
                                                                 </div>
                                                             </td>
                                                         </tr>

@@ -6,14 +6,14 @@ const Navigation = ({ menu }) => {
     return (
         <>
             <ul className="nav">
-                {menu.map(({ name, url, icon, isParents, subMenu }, index) => (
+                {menu.map(({ name, url, icon, isParents, collapseId, subMenu }, index) => (
                     <li className={`nav-item ${router.pathname == url ? "active" : ""}`} key={index}>
                         {isParents ? (
                             <>
                                 <a
                                     className="nav-link"
                                     data-toggle="collapse"
-                                    href="#ui-basic"
+                                    href={`#${collapseId}`}
                                     aria-expanded="false"
                                     aria-controls="ui-basic"
                                 >
@@ -21,7 +21,7 @@ const Navigation = ({ menu }) => {
                                     <span className="menu-title">{name}</span>
                                     <i className="menu-arrow"></i>
                                 </a>
-                                <div className="collapse" id="ui-basic">
+                                <div className="collapse" id={collapseId}>
                                     <ul className="nav flex-column sub-menu">
                                         {
                                             subMenu.map((item, index) => (

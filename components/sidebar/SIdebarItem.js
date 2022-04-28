@@ -9,9 +9,10 @@ const SIdebarItem = () => {
         icon: 'icon-grid menu-icon',
         isParents: false,
         subMenu: [],
-    }
-        , {
-        name: 'Users',
+    },
+    {
+        name: 'User Management',
+        collapseId: 'user-management',
         icon: 'icon-grid menu-icon',
         isParents: true,
         subMenu: [
@@ -27,7 +28,22 @@ const SIdebarItem = () => {
                 isParents: false,
             },
         ],
-    },]
+    },
+    {
+        name: 'Addministration',
+        collapseId: 'administration',
+        icon: 'icon-grid menu-icon',
+        isParents: true,
+        subMenu: [
+            {
+
+                name: "Role List",
+                url: "/admin/role-list",
+                isParents: false,
+            },
+
+        ],
+    }]
 
     const menu = useSelector((state) => state.switchMenu.menu);
     return (
