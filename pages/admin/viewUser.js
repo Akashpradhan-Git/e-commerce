@@ -11,7 +11,7 @@ import Spinner from '../../components/util/Spinner'
 import Pagination from '../../components/pagination/Pagination'
 import getToken from '../../config/getToken'
 import * as api from '../../api/usersApi'
-import { useQuery } from 'react-query'
+import useSWR from 'swr'
 
 
 const viewUser = () => {
@@ -28,22 +28,22 @@ const viewUser = () => {
         }
     }, [token])
 
-
     //* Get user list
-    const { isLoading, isError, data } = useQuery('/users/lists', api.getUsersList, { keepPreviousData: true, })
+    const { data, error, isLoading, isError } = useSWR('/api/user/view', api.getUsersList);
+
 
     if (isError) {
         toast.warn("failed to load")
     }
 
-    if (isLoading) return <Spinner />
+    if (!data) return <Spinner />
 
     // ! Pegination
 
     // Get current posts
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = data.slice(indexOfFirstPost, indexOfLastPost);
+    const currentPosts = data?.slice(indexOfFirstPost, indexOfLastPost);
 
     // Change page
     const paginate = pageNumber => setCurrentPage(pageNumber);
@@ -112,7 +112,7 @@ const viewUser = () => {
 
                                     <Pagination
                                         postsPerPage={postsPerPage}
-                                        totalPosts={data.length}
+                                        totalPosts={data?.length}
                                         paginate={paginate}
                                     />
                                 </div>

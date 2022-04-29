@@ -8,8 +8,13 @@ import * as Yup from 'yup'
 import InputField from '../../components/form-element/InputField'
 import { FaEdit, FaEye } from 'react-icons/fa'
 import Link from 'next/link'
+import useSWR from 'swr'
+import Spinner from '../../components/util/Spinner'
+import { toast } from 'react-toastify'
+import * as api from '../../api/usersApi'
 
 const roleList = () => {
+
 
     const formik = useFormik({
         initialValues: {
@@ -51,7 +56,13 @@ const roleList = () => {
         },
     });
 
+    const { data, error, isLoading, isError } = useSWR('/api/user/role', api.getRoleList);
 
+    if (isError) {
+        toast.warn("failed to load")
+    }
+
+    if (!data) return <Spinner />
 
 
 
@@ -143,56 +154,36 @@ const roleList = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>1 </td>
-                                                        <td>Role_admin </td>
-                                                        <td>Admin User</td>
-                                                        <td>System Admin </td>
-                                                        <td>
-                                                            <div className="btn-group" role="group" aria-label="Basic example">
-                                                                <Link href='/admin/user/edit-role/[eId]' as={`/admin/user/edit-role/1`}>
-                                                                    <a className="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                                        <FaEdit />
-                                                                    </a>
-                                                                </Link>
 
-                                                                <Link href='/admin/user/view-role/[vid]' as={`/admin/user/view-role/2`}>
-                                                                    <a className="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="View">
-                                                                        <FaEye />
-                                                                    </a>
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    {/* {
-                                                        currentPosts?.map((item, index) => {
+                                                    {
+                                                        data?.map((item, index) => {
                                                             return (
                                                                 <tr key={index}>
                                                                     <th scope="row">{index + 1}</th>
-                                                                    <td>{item.userName}</td>
-                                                                    <td>{item.userId}</td>
-                                                                    <td>{item.mobile}</td>
-                                                                    <td>{item.email}</td>
-                                                                    <td>{item.designation}</td>
+                                                                    <td>{item.roleCode}</td>
+                                                                    <td>{item.displayName}</td>
+                                                                    <td>{item.description}</td>
+
                                                                     <td>
                                                                         <div className="btn-group" role="group" aria-label="Basic example">
-                                                                            <Link href='/admin/[id]' as={`/admin/${item.userId}`}>
+                                                                            <Link href='/admin/user/edit-role/[eId]' as={`/admin/user/edit-role/1`}>
                                                                                 <a className="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Edit">
                                                                                     <FaEdit />
                                                                                 </a>
                                                                             </Link>
 
-                                                                            <Link href='/admin/user/[vId]' as={`/admin/user/${item.userId}`}>
+                                                                            <Link href='/admin/user/view-role/[vid]' as={`/admin/user/view-role/2`}>
                                                                                 <a className="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="View">
                                                                                     <FaEye />
                                                                                 </a>
                                                                             </Link>
                                                                         </div>
                                                                     </td>
+
                                                                 </tr>
                                                             )
                                                         })
-                                                    } */}
+                                                    }
 
                                                 </tbody>
                                             </table>

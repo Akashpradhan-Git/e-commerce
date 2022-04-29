@@ -32,14 +32,7 @@ function MyApp({ Component, pageProps }) {
   NProgress.configure({ showSpinner: false })
 
   const Layout = Component.Layout || DefaultLayout;
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: process.env.NODE_ENV === 'production',
-        refetchOnWindowFocus: process.env.NODE_ENV === 'production',
-      },
-    },
-  })
+  const queryClient = new QueryClient();
   return (
     <>
       <QueryClientProvider client={queryClient}>

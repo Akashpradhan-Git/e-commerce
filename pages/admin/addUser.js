@@ -12,13 +12,13 @@ import moment from 'moment'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import useFetch from '../../api/useFetch'
 import * as api from '../../api/usersApi'
 import Spinner from '../../components/util/Spinner'
+import useSWR from 'swr'
 
 //! FIXME Use React mutation hook
 const addUser = () => {
-    const [dateOfbirth, setdateOfbirth] = useState("");
+    const [dob, setDob] = useState("");
     const [rowsData, setRowsData] = useState([]); // table rows data
     const [isLoading, setIsLoading] = useState(false); // loading state
     //! User Validation
@@ -31,6 +31,7 @@ const addUser = () => {
             userMobile: "",
             userEmail: "",
             designation: "",
+            roleId: ""
         },
         validationSchema: Yup.object({
             username: Yup.string().required('Username is required'),
@@ -39,10 +40,12 @@ const addUser = () => {
             userMobile: Yup.string().max(10).min(10).matches(phoneRegExp, 'Phone number is not valid').required('Mobile is required'),
             userEmail: Yup.string().email("Field should contain a valid e-mail").required('Email is required'),
             designation: Yup.string().required('Designation is required'),
-
+            roleId: Yup.string().required('Role is required')
         }),
         onSubmit: async values => {
             const formData = submitData(values)
+            console.log(formData)
+
             setIsLoading(true)
             const response = await api.saveUser(formData)
 
@@ -57,63 +60,22 @@ const addUser = () => {
             }
         },
     });
+    console.log("Add User formik", formik.values)
 
     function submitData(values) {
-        const dateOfbirth = moment(dateOfbirth).format('DD/MM/YYYY').toString();
-        let isPrimary = [];
-        let roleId = [];
-
-        rowsData.forEach(element => {
-            console.log(element)
-            isPrimary.push(
-                element.isPrimary,
-            )
-            roleId.push(
-                element.roleId,
-            )
-        });
-        const formData = { ...values, dateOfbirth, isPrimary, roleId }
+        const dateOfbirth = moment(dob).format('DD/MM/YYYY').toString();
+        console.log("Date of birth2", dateOfbirth)
+        const isPrimary = 1
+        const formData = { ...values, dateOfbirth, isPrimary }
         return formData
     }
-
-
-    //Todo : Get token from local storage
-    function getToken() {
-        const token = null
-        if (typeof window !== 'undefined') {
-            token = JSON.parse(localStorage.getItem('user'));
-        }
-        return token;
-    }
-
-    //TODO Dynamic Table Rows
-    const addTableRows = () => {
-
-        const rowsInput = {
-            isPrimary: '',
-            roleId: '',
-            status: ''
-        }
-        setRowsData([...rowsData, rowsInput])
-    }
-
-    const handleRowChange = (index, evnt) => {
-        const { name, value } = evnt.target;
-        const rowsInput = [...rowsData];
-        rowsInput[index][name] = value;
-        setRowsData(rowsInput);
-    }
-    const deleteTableRows = (index) => {
-        const rows = [...rowsData];
-        rows.splice(index, 1);
-        setRowsData(rows);
-    }
+    console.log("Date of birth", dob)
 
 
     //TODO : Get Role Data from API and Pass to Dynamic Select Field
-    const token = getToken();
-    const [data] = useFetch('http://localhost:8050/e-commerce/api/1.0/umt/roles/', token);
 
+
+    const { data } = useSWR('/api/user/role', api.getRoleList);
     if (isLoading) return <Spinner />
 
     return (
@@ -149,8 +111,8 @@ const addUser = () => {
                                             <div className="form-group">
                                                 <label htmlFor="input-field">Date of Birth</label>
                                                 <DatePicker
-                                                    selected={dateOfbirth}
-                                                    onChange={(date) => setdateOfbirth(date)}
+                                                    selected={dob}
+                                                    onChange={(date) => setDob(date)}
                                                     peekNextMonth
                                                     showMonthDropdown
                                                     showYearDropdown
@@ -248,9 +210,26 @@ const addUser = () => {
 
                                             />
                                         </div>
+
+                                        <div className='col-md-3'>
+                                            <div className="form-group">
+                                                <label htmlFor="input-field">Role</label>
+                                                <select className="form-control form-control-sm" name="roleId" onChange={formik.handleChange} onBlur={formik.handleBlur}>
+                                                    <option value="">Select Role</option>
+                                                    {
+                                                        data?.map(item => {
+                                                            return (
+                                                                <option key={item.roleId} value={item.roleId}>{item.displayName}</option>
+                                                            )
+                                                        })
+                                                    }
+                                                </select>
+                                                {formik.errors.roleId && formik.touched.roleId ? <small className="text-danger">{formik.errors.roleId}</small> : null}
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div className="row">
+                                    {/* <div className="row">
                                         <table className="table">
                                             <thead>
                                                 <tr>
@@ -265,7 +244,7 @@ const addUser = () => {
                                                 <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleRowChange} selectValue={data} />
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </div> */}
                                     <div className='row mt-4 center'>
                                         <button type="submit" className="btn btn-primary" onClick={formik.handleSubmit}>Submit</button>
                                     </div>

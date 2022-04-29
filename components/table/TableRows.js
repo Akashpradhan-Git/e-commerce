@@ -6,9 +6,6 @@ const TableRows = ({ rowsData, deleteTableRows, handleChange, selectValue, isEdi
             const { pRole, role, status } = data;
             const { roleId, userRoleId } = data ? data : ""
 
-            console.log("+++++", roleId, userRoleId)
-            // const { primaryRole, roles, activeStatus } = selectValue;
-            console.log(isEdit, "isEdit")
             return (
                 <tr key={index}>
                     {!isEdit ?

@@ -5,13 +5,33 @@ import getToken from '../config/getToken';
 // *@ Get Role list
 export const getRoleList = async () => {
     const token = getToken();
-    const { data } = await axios.get(`/1.0/umt/roles`, {
+    const { data } = await axios.get(`/1.0/umt/roles/`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
     });
-    return [data.data];
+    return data.data;
 }
+
+
+
+//* @ get Role By its Id
+export const getRoleById = async (id) => {
+    try {
+        const token = getToken()
+        const { data } = await axios.get(`/1.0/umt/roles/user/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return data.data[0];
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 
 // * : Get all user List
@@ -48,24 +68,6 @@ export const getUserById = async (uniqueId) => {
     }
 }
 
-export const Test = async (uniqueId) => {
-    try {
-        const token = getToken()
-        const { data } = await axios.get(`/1.0/umt/users/edit/${uniqueId}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            }
-        })
-        return data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-
-
 
 //* Save User Details
 export const saveUser = async (saveData) => {
@@ -85,12 +87,11 @@ export const saveUser = async (saveData) => {
 }
 
 
-
 //* Update user by its id
 export const updateUser = async (uniqueId, updateData) => {
     try {
         const token = getToken()
-        let { data } = await axios.post('/1.0/umt/users/save', updateData,
+        let { data } = await axios.post('/1.0/umt/users/update', updateData,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -102,3 +103,6 @@ export const updateUser = async (uniqueId, updateData) => {
         console.log(error)
     }
 }
+
+
+
