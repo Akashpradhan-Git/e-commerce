@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import Head from 'next/head'
 import PageLayout from '../../components/layout/PageLayout'
 import PageName from '../../components/page_components/PageName'
@@ -14,49 +14,44 @@ import { toast } from 'react-toastify'
 import * as api from '../../api/usersApi'
 
 const roleList = () => {
+    const [isLoading, setIsLoading] = useState(false); // loading state
 
+
+    //* fetch Role from api
+    const { data, error, isError, mutate } = useSWR('/api/user/role', api.getRoleList);
 
     const formik = useFormik({
         initialValues: {
-            rolecode: "",
-            displayname: "",
+            roleCode: "",
+            displayName: "",
             description: "",
-            maxAssign: "",
+            maxAssignments: "",
 
         },
         validationSchema: Yup.object({
-            rolecode: Yup.string().required('Username is required'),
-            displayname: Yup.string().required('Firstname is required'),
+            roleCode: Yup.string().required('Username is required'),
+            displayName: Yup.string().required('Firstname is required'),
             description: Yup.string().required('Lastname is required'),
-            maxAssign: Yup.string().required('Designation is required'),
+            maxAssignments: Yup.string().required('Designation is required'),
 
         }),
-        onSubmit: async values => {
-            // const formData = submitData(values)
-            // const token = getToken()
-            // try {
-            //     let { data } = await axios.post('/1.0/umt/users/save', formData,
-            //         {
-            //             headers: {
-            //                 'Content-Type': 'application/json',
-            //                 'Authorization': `Bearer ${token}`
-            //             }
-            //         });
+        onSubmit: async (values, { resetForm }) => {
+            setIsLoading(true)
+            const response = await api.saveRole(values)
 
-            //     if (data.outcome === true) {
-            //         toast.success("User Added Successfully")
-            //     }
-            //     else {
-            //         toast.error("User Not Added")
-            //         console.log(data)
-            //     }
-            // } catch (error) {
-            //     console.log(error)
-            // }
+            if (response.outcome === true) {
+                setIsLoading(false)
+                toast.success("Role saved successfully");
+                mutate();
+                resetForm();
+            } else {
+                setIsLoading(false)
+                toast.error("Role not saved")
+            }
+            console.log(submitting)
         },
     });
 
-    const { data, error, isLoading, isError } = useSWR('/api/user/role', api.getRoleList);
 
     if (isError) {
         toast.warn("failed to load")
@@ -64,6 +59,7 @@ const roleList = () => {
 
     if (!data) return <Spinner />
 
+    if (isLoading) return <Spinner />
 
 
     return (
@@ -86,13 +82,13 @@ const roleList = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={formik.values.rolecode}
+                                                value={formik.values.roleCode}
                                                 placeholder="Role Code"
                                                 label="Role Code"
-                                                name="rolecode"
+                                                name="roleCode"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                                error={formik.errors.rolecode && formik.touched.rolecode ? formik.errors.rolecode : null}
+                                                error={formik.errors.roleCode && formik.touched.roleCode ? formik.errors.roleCode : null}
                                             />
 
                                         </div>
@@ -100,13 +96,13 @@ const roleList = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={formik.values.displayname}
+                                                value={formik.values.displayName}
                                                 placeholder="Display Name"
                                                 label="Display Name"
-                                                name="displayname"
+                                                name="displayName"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                                error={formik.errors.displayname && formik.touched.displayname ? formik.errors.displayname : null}
+                                                error={formik.errors.displayName && formik.touched.displayName ? formik.errors.displayName : null}
                                             />
                                         </div>
                                         <div className='col-md-3'>
@@ -125,13 +121,13 @@ const roleList = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="number"
-                                                value={formik.values.maxAssign}
+                                                value={formik.values.maxAssignments}
                                                 placeholder="Maximum Assignment"
                                                 label="Maximum Assignment"
-                                                name="maxAssign"
+                                                name="maxAssignments"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                                error={formik.errors.maxAssign && formik.touched.maxAssign ? formik.errors.maxAssign : null}
+                                                error={formik.errors.maxAssignments && formik.touched.maxAssignments ? formik.errors.maxAssignments : null}
 
                                             />
                                         </div>
@@ -166,13 +162,13 @@ const roleList = () => {
 
                                                                     <td>
                                                                         <div className="btn-group" role="group" aria-label="Basic example">
-                                                                            <Link href='/admin/user/edit-role/[eId]' as={`/admin/user/edit-role/1`}>
+                                                                            <Link href='/admin/user/edit-role/[eId]' as={`/admin/user/edit-role/${item.roleId}`}>
                                                                                 <a className="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Edit">
                                                                                     <FaEdit />
                                                                                 </a>
                                                                             </Link>
 
-                                                                            <Link href='/admin/user/view-role/[vid]' as={`/admin/user/view-role/2`}>
+                                                                            <Link href='/admin/user/view-role/[vid]' as={`/admin/user/view-role/${item.roleId}`}>
                                                                                 <a className="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="View">
                                                                                     <FaEye />
                                                                                 </a>

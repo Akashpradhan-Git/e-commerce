@@ -44,8 +44,6 @@ const addUser = () => {
         }),
         onSubmit: async values => {
             const formData = submitData(values)
-            console.log(formData)
-
             setIsLoading(true)
             const response = await api.saveUser(formData)
 

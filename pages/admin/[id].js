@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import * as api from '../../api/usersApi'
+
 import { useEffect } from 'react'
 import useSWR from 'swr'
 
@@ -47,7 +48,6 @@ const singleUser = () => {
     // * : Get Unique User
     useEffect(() => {
         getUserById()
-        console.log("uuuu")
     }, [])
 
     const getUserById = async () => {
@@ -158,7 +158,7 @@ const singleUser = () => {
 
     //TODO : Get Role Data from API
     const { data } = useSWR('/api/user/roles', api.getRoleList);
-    const { data: role } = useSWR(['/api/user/role:id', uniqueId], () => api.getRoleById(uniqueId));
+    const { data: role } = useSWR(['/api/user/role:id', uniqueId], () => api.getUserRoleById(uniqueId));
     console.log("dateOfBirth", dateOfBirth)
     if (isLoading)
         return <Spinner />

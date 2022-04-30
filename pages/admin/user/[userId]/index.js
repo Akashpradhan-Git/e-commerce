@@ -20,7 +20,7 @@ const singleUser = () => {
     }
 
     if (!data) return <Spinner />
-
+    console.log(data)
     return (
         <>
             <Head>
@@ -42,7 +42,7 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={data?.data.userId ? data?.data.userId : ''}
+                                                value={data?.data.userid ? data?.data.userid : ''}
                                                 placeholder="User Id"
                                                 label="User Id"
                                                 name="userid"
@@ -53,7 +53,7 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={data?.data.userName ? data?.data.userName : ''}
+                                                value={data?.data.username ? data?.data.username : ''}
                                                 placeholder="User Name"
                                                 label="User Name"
                                                 name="username"
@@ -64,7 +64,7 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={data?.data.firstName ? data?.data.firstName : ''}
+                                                value={data?.data.firstname ? data?.data.firstname : ''}
                                                 placeholder="First Name"
                                                 label="First Name"
                                                 name="fname"
@@ -74,7 +74,7 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={data?.data.lastName ? data?.data.lastName : ''}
+                                                value={data?.data.lastname ? data?.data.lastname : ''}
                                                 placeholder="Last Name"
                                                 label="Last Name"
                                                 name="lname"
@@ -85,7 +85,7 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={data?.data.lastName ? moment(data?.data.lastName).format('DD/MM/YYYY') : ''}
+                                                value={data?.data.dateOfbirth ? moment(data?.data.dateOfbirth).format('DD/MM/YYYY') : ''}
                                                 placeholder="Date of Birth"
                                                 label="Date of Birth"
                                                 name="dob"
@@ -96,7 +96,7 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="number"
-                                                value={data?.data.mobile ? data?.data.mobile : ''}
+                                                value={data?.data.userMobile ? data?.data.userMobile : ''}
                                                 placeholder="Mobile"
                                                 label="Mobile"
                                                 name="mobile"
@@ -107,7 +107,7 @@ const singleUser = () => {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="email"
-                                                value={data?.data.email ? data?.data.email : ''}
+                                                value={data?.data.userEmail ? data?.data.userEmail : ''}
                                                 placeholder="Email"
                                                 label="Email"
                                                 name="email"
