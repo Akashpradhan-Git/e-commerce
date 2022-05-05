@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Head from 'next/head'
-import PageLayout from '../../components/layout/PageLayout'
+import PageLayout from '../../components/layout/pageLayout'
 import PageName from '../../components/page_components/PageName'
 import MainLayout from '../../components/layout/main'
 import { useFormik } from 'formik'

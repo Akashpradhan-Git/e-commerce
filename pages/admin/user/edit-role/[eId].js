@@ -1,4 +1,4 @@
-import PageLayout from "../../../../components/layout/PageLayout";
+import PageLayout from "../../../../components/layout/pageLayout";
 import PageName from "../../../../components/page_components/PageName";
 import InputField from "../../../../components/form-element/InputField";
 import MainLayout from "../../../../components/layout/main";
