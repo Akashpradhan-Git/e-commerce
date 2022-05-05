@@ -1,6 +1,6 @@
 import axios from "axios"
-
+import { API_HOST } from "../services/api"
 const Instance = axios.create({
-    baseURL: "http://localhost:8050/e-commerce/api",
+    baseURL: `${API_HOST}`,
 })
 export default Instance
