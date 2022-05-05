@@ -10,8 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from 'react-redux';
 import store from '../redux/store'
 
-//! Remove in production
-import { ReactQueryDevtools } from 'react-query/devtools'
+
 
 import DefaultLayout from '../components/layout/default';
 
@@ -21,7 +20,6 @@ import NProgress from 'nprogress'
 import "../styles/nprogress.css";
 import "nprogress/nprogress.css";
 
-import { QueryClientProvider, QueryClient } from 'react-query';
 
 function MyApp({ Component, pageProps }) {
 
@@ -32,18 +30,17 @@ function MyApp({ Component, pageProps }) {
   NProgress.configure({ showSpinner: false })
 
   const Layout = Component.Layout || DefaultLayout;
-  const queryClient = new QueryClient();
+
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-          <ToastContainer />
-        </Provider>
-        <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
-      </QueryClientProvider>
+
+      <Provider store={store}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+        <ToastContainer />
+      </Provider>
+
     </>
   )
 }

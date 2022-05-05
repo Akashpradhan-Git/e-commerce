@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react'
 
 function subCategory() {
 
-    const [option, setOption] = useState([])
+    const [option, setOption] = useState({})
 
     function onChangeInput(value) {
         console.log(value);
@@ -31,7 +31,9 @@ function subCategory() {
         getOption()
     }, [])
 
-    console.log(option, option[2]);
+    if (option.length === 0) {
+        console.log('loading')
+    }
 
     const options = [
         { label: 'React', value: 'react' },
@@ -61,7 +63,7 @@ function subCategory() {
                                 <form >
                                     <div className='row'>
                                         <div className='col-md-3'>
-                                            <CustomSelect isMulti={false} defaultValue={option !== null && option !== undefined ? option[5] : null} onChange={onChangeInput} options={option} label="Choose a libary" />
+                                            <CustomSelect isMulti={false} onChange={onChangeInput} options={option} label="Choose a libary" />
                                         </div>
                                         <div className='col-md-3'>
                                             <InputField

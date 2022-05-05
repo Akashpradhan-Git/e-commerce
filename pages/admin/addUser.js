@@ -12,7 +12,7 @@ import moment from 'moment'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import * as api from '../../api/usersApi'
+import * as api from '../../services/usersApi'
 import Spinner from '../../components/util/Spinner'
 import useSWR from 'swr'
 

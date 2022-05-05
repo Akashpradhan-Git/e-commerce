@@ -11,7 +11,7 @@ import Link from 'next/link'
 import useSWR from 'swr'
 import Spinner from '../../components/util/Spinner'
 import { toast } from 'react-toastify'
-import * as api from '../../api/usersApi'
+import * as api from '../../services/usersApi'
 
 const roleList = () => {
     const [isLoading, setIsLoading] = useState(false); // loading state
@@ -38,7 +38,6 @@ const roleList = () => {
         onSubmit: async (values, { resetForm }) => {
             setIsLoading(true)
             const response = await api.saveRole(values)
-
             if (response.outcome === true) {
                 setIsLoading(false)
                 toast.success("Role saved successfully");
@@ -48,7 +47,6 @@ const roleList = () => {
                 setIsLoading(false)
                 toast.error("Role not saved")
             }
-            console.log(submitting)
         },
     });
 

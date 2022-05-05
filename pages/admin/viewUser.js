@@ -10,7 +10,7 @@ import MainLayout from '../../components/layout/main'
 import Spinner from '../../components/util/Spinner'
 import Pagination from '../../components/pagination/Pagination'
 import getToken from '../../config/getToken'
-import * as api from '../../api/usersApi'
+import * as api from '../../services/usersApi'
 import useSWR from 'swr'
 
 

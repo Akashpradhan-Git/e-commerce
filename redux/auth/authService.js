@@ -1,5 +1,5 @@
 import axios from "../../config/axiosInstance";
-import { API_HOST } from "../../api/api";
+import { API_HOST } from "../../services/api";
 
 //TODO : To change the  api url please visit the api folder
 

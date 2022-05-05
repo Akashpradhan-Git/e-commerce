@@ -1,13 +1,18 @@
-import PageLayout from '../../../components/layout/pageLayout'
+import Layout from '../../../components/layout/pageLayout'
 import PageName from '../../../components/page_components/PageName'
 import MainLayout from '../../../components/layout/main'
 import InputField from '../../../components/form-element/InputField'
+import * as api from '../../../services/masterApi'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { useState } from 'react';
+import Spinner from '../../../components/util/Spinner'
 
-function countryMaster() {
+
+function addCountry() {
+    const [isLoading, setIsLoading] = useState(false); // loading state
 
     const formik = useFormik({
         initialValues: {
@@ -16,18 +21,31 @@ function countryMaster() {
         validationSchema: Yup.object({
             countryName: Yup.string().required('Country Name is required'),
         }),
-        onSubmit: async values => {
-            console.log(values);
+
+        onSubmit: async (values, { resetForm }) => {
+            setIsLoading(true)
+            const response = await api.saveCountry(values)
+            console.log(response)
+            if (response.data) {
+                setIsLoading(false)
+                toast.success("Country Added Successfully")
+                resetForm();
+            } else {
+                setIsLoading(false)
+                toast.error("Role not saved")
+            }
         },
     });
+
+    if (isLoading) return <Spinner />
+
     return (
         <>
             <Head>
                 <title>Add Country</title>
-                <meta name="description" content="View Single user in e-commerces application" />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
-            <PageLayout>
+
+            <Layout>
                 <PageName title="Add Country" />
 
                 <div className="row">
@@ -42,15 +60,16 @@ function countryMaster() {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                placeholder="City Name"
-                                                label="City Name"
-                                                name="cityName"
-                                                value={formik.values.cityName}
+                                                placeholder="Country Name"
+                                                label="Country Name"
+                                                name="countryName"
+                                                value={formik.values.countryName}
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                                error={formik.errors.cityName && formik.touched.cityName ? formik.errors.cityName : null}
+                                                error={formik.errors.countryName && formik.touched.countryName ? formik.errors.countryName : null}
                                             />
                                         </div>
+
                                     </div>
                                     <div className='row mt-4 center'>
                                         <button type="submit" className="btn btn-primary" onClick={formik.handleSubmit}>Submit</button>
@@ -60,11 +79,11 @@ function countryMaster() {
                         </div>
                     </div>
                 </div>
-            </PageLayout>
+            </Layout>
 
         </>
     )
 }
+addCountry.Layout = MainLayout;
 
-countryMaster.Layout = MainLayout;
-export default countryMaster
+export default addCountry

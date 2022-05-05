@@ -5,24 +5,78 @@ import InputField from '../../../components/form-element/InputField'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
+import useSWR from 'swr'
 import * as Yup from 'yup'
+import * as api from '../../../services/masterApi'
+import CustomSelect from '../../../components/form-element/CustomSelect'
+import { useState } from 'react'
+import swal from 'sweetalert';
 
 function city() {
+    const [regionCode, setRegionCode] = useState([])
+    const [isLoading, setIsLoading] = useState(false); // loading state
+
+    const { data: state } = useSWR('/state/get-all-states', api.getStateList);
+
+    // Select Options
+    const options = []
+    if (state) {
+        state.map(d => {
+            options.push({
+                "value": d.regionCode,
+                "label": d.region
+            })
+        })
+    }
+
+
+    function onChangeInput(value) {
+        setRegionCode(value)
+    }
+
 
     const formik = useFormik({
         initialValues: {
             cityName: "",
-            regionCode: "",
+            cityCode: "",
 
         },
         validationSchema: Yup.object({
             cityName: Yup.string().required('City Name is required'),
-            regionCode: Yup.string().required('Region Code is required'),
+            cityCode: Yup.string().required('Region Code is required'),
         }),
-        onSubmit: async values => {
-            console.log(values);
+        onSubmit: async (values, { resetForm }) => {
+            if (regionCode.length === 0) {
+                toast.error('Please select State')
+                return
+            }
+            const data = saveCity(values)
+            console.log("submit data", data)
+            const response = await api.saveCity(data)
+            setIsLoading(true)
+            if (response.data) {
+                swal({
+                    title: "Good job!",
+                    text: `${response.message}`,
+                    icon: "success",
+                    button: "Ok",
+                });
+                setIsLoading(false)
+                resetForm();
+            }
+            else {
+                setIsLoading(false)
+                toast.error("Something went wrong")
+            }
         },
     });
+
+
+    function saveCity(values) {
+        let stateData = { ...values, regionCode: regionCode.value }
+        return stateData
+    }
+
     return (
         <>
             <Head>
@@ -42,6 +96,17 @@ function city() {
                             <div className="card-body">
                                 <form>
                                     <div className='row'>
+
+                                        <div className='col-md-3'>
+                                            <CustomSelect
+                                                isMulti={false}
+                                                onChange={onChangeInput}
+                                                options={options}
+                                                name="state"
+                                                label="Choose a State"
+                                            />
+                                        </div>
+
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
@@ -57,13 +122,13 @@ function city() {
                                         <div className='col-md-3'>
                                             <InputField
                                                 type="text"
-                                                value={formik.values.regionCode}
-                                                placeholder="Region Code"
-                                                label="Region Code"
-                                                name="regionCode"
+                                                value={formik.values.cityCode}
+                                                placeholder="City Code"
+                                                label="City Code"
+                                                name="cityCode"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
-                                                error={formik.errors.regionCode && formik.touched.regionCode ? formik.errors.regionCode : null}
+                                                error={formik.errors.cityCode && formik.touched.cityCode ? formik.errors.cityCode : null}
                                             />
                                         </div>
                                     </div>

@@ -43,7 +43,62 @@ const SIdebarItem = () => {
             },
 
         ],
-    }]
+    },
+    {
+        name: 'Master',
+        collapseId: 'master',
+        icon: 'icon-grid menu-icon',
+        isParents: true,
+        subMenu: [
+            {
+
+                name: "Add Country",
+                url: "/admin/master/addCountry",
+                isParents: false,
+            },
+            {
+
+                name: "Add State",
+                url: "/admin/master/add-State",
+                isParents: false,
+            },
+            {
+
+                name: "Add City",
+                url: "/admin/master/addCity",
+                isParents: false,
+            },
+            {
+                name: "Customer  Address",
+                url: "/admin/master/customerAddress",
+                isParents: false,
+            },
+            {
+                name: "Bushiness  Type",
+                url: "/admin/master/businessType",
+                isParents: false,
+            },
+        ],
+    },
+    {
+        name: 'Product',
+        collapseId: 'product',
+        icon: 'icon-grid menu-icon',
+        isParents: true,
+        subMenu: [
+            {
+                name: "Product Add",
+                url: "/admin/product/addProduct",
+                isParents: false,
+            },
+            {
+                name: "Add Product Category",
+                url: "/admin/product/add-product-category",
+                isParents: false,
+            },
+
+        ],
+    },]
 
     const menu = useSelector((state) => state.switchMenu.menu);
     return (

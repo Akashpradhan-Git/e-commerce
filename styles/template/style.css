@@ -36166,4 +36166,9 @@ div.tagsinput span.tag a {
   }
 }
 
+.form-group label.required:after {
+  content: '*';
+  color: red;
+}
+
 /*# sourceMappingURL=../maps/vertical-layout-light/style.css.map */
