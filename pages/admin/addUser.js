@@ -53,21 +53,17 @@ const addUser = () => {
             }
             else {
                 toast.error("User Not Added")
-                console.log(data)
                 setIsLoading(false)
             }
         },
     });
-    console.log("Add User formik", formik.values)
 
     function submitData(values) {
         const dateOfbirth = moment(dob).format('DD/MM/YYYY').toString();
-        console.log("Date of birth2", dateOfbirth)
         const isPrimary = 1
         const formData = { ...values, dateOfbirth, isPrimary }
         return formData
     }
-    console.log("Date of birth", dob)
 
 
     //TODO : Get Role Data from API and Pass to Dynamic Select Field

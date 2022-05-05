@@ -6,7 +6,6 @@ const Navigation = ({ menu }) => {
 
     const user = 'admin'
     const menuList = menu.filter(item => item.user === user)
-    console.log(menuList)
     const router = useRouter();
     return (
         <>

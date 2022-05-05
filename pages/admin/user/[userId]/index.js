@@ -5,7 +5,7 @@ import InputField from '../../../../components/form-element/InputField'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import moment from 'moment'
-import * as api from '../../../../api/usersApi'
+import * as api from '../../../../services/usersApi'
 import Spinner from '../../../../components/util/Spinner'
 import useSWR from 'swr'
 
@@ -20,7 +20,6 @@ const singleUser = () => {
     }
 
     if (!data) return <Spinner />
-    console.log(data)
     return (
         <>
             <Head>

@@ -11,6 +11,7 @@ import getToken from '../config/getToken';
 export const saveProductCategory = async (payload) => {
     try {
         const token = getToken()
+        console.log(token, payload)
         let { data } = await axios.post('/product-master/add-update-p-category', payload,
             {
                 headers: {

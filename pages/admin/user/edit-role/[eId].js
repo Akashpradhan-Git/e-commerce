@@ -4,7 +4,7 @@ import InputField from "../../../../components/form-element/InputField";
 import MainLayout from "../../../../components/layout/main";
 import { useRouter } from 'next/router'
 import Head from "next/head";
-import * as api from '../../../../api/usersApi'
+import * as api from '../../../../services/usersApi'
 import useSWR from 'swr'
 import { useFormik } from 'formik'
 import Spinner from "../../../../components/util/Spinner";
@@ -27,7 +27,6 @@ function EditRole() {
     const { roleId, roleCode, description, displayName, maxAssignments } = role;
 
     const { data } = useSWR(['/api/umt/roles:id', 'edit Role', eId], () => api.getRoleById(eId));
-    console.log(data)
 
     // * : Get Unique User
     // useEffect(() => {

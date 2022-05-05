@@ -25,7 +25,6 @@ function addCountry() {
         onSubmit: async (values, { resetForm }) => {
             setIsLoading(true)
             const response = await api.saveCountry(values)
-            console.log(response)
             if (response.data) {
                 setIsLoading(false)
                 toast.success("Country Added Successfully")

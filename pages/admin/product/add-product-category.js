@@ -12,42 +12,66 @@ import { useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import CustomSelect from '../../../components/form-element/CustomSelect'
 import useSWR from 'swr'
+import { convertToBase64 } from '../../../util/base64'
+
 
 const addProductCategory = () => {
 
+
     const [loading, setLoading] = useState(false)
-    const [categoryMap, setCategoryMap] = useState(null)
-    const [category, setCategory] = useState({
-        categoryName: '',
-        categoryImage: '',
-        categoryDescription: '',
-    })
+    const [postImage, setPostImage] = useState({
+        categoryImage: "",
+    });
+    const [categoryMap, setCategoryMap] = useState("")
+
 
     //* get all category list
     const { data, error, isError, mutate } = useSWR('/product-master/get-all-p-categories', api.getProductCategory);
 
-    console.log(data)
-    const handleChange = (e) => {
-        setCategory({
-            ...category,
-            [e.target.name]: e.target.value
-        })
-    }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const updatedCategory = {
-            ...category,
-            parentCategory: {
-                categoryId: categoryMap.value
+    const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertToBase64(file);
+        setPostImage({ categoryImage: base64 });
+    };
+
+
+    const formik = useFormik({
+        initialValues: {
+            categoryName: '',
+            categoryDescription: '',
+        },
+        validationSchema: Yup.object({
+            categoryName: Yup.string().required('Category Name is required'),
+            categoryDescription: Yup.string().required('Description is required'),
+        }),
+        onSubmit: async (values, { resetForm }) => {
+            const data = categoryData(values)
+
+            setLoading(true)
+            const response = await api.saveProductCategory(data)
+            if (response.data) {
+                setLoading(false)
+                toast.success(response.message)
+                resetForm()
+                mutate()
+            } else {
+                setLoading(false)
+                toast.error('Something went wrong')
             }
         }
-        const response = await api.saveProductCategory(updatedCategory)
-        console.log(response)
-        setLoading(true)
+    })
+
+    const categoryData = (values) => {
+        const data = {
+            ...values,
+            categoryImage: postImage.categoryImage,
+            parentCategory: categoryMap.value ? categoryMap.value : null
+        }
+        return data
     }
 
-    // Select Options
+
     const options = []
     if (data) {
         data.map(d => {
@@ -57,7 +81,9 @@ const addProductCategory = () => {
             })
         })
     }
-
+    console.log(loading)
+    if (loading)
+        return <Spinner />
 
     return (
         <>
@@ -73,12 +99,16 @@ const addProductCategory = () => {
                                 <h4>Add Product Category</h4>
                             </div>
                             <div className="card-body">
-                                <form>
+                                <form id="create-course-form">
+
                                     <div className='row'>
                                         <div className='col-md-3'>
                                             <div className='form-group'>
                                                 <label htmlFor="input-field" className='required'>Add Category</label>
-                                                <input type="text" name='categoryName' className="form-control form-control-sm" id="input-field" placeholder="Enter Category" onChange={handleChange} />
+                                                <input type="text" name='categoryName' className="form-control form-control-sm" id="input-field" placeholder="Enter Category" onChange={formik.handleChange} onBlur={formik.handleBlur} />
+                                                {formik.touched.categoryName && formik.errors.categoryName ? (
+                                                    <small className="error-message text-danger">{formik.errors.categoryName}</small>
+                                                ) : null}
                                             </div>
                                         </div>
                                         <div className='col-md-3'>
@@ -93,20 +123,24 @@ const addProductCategory = () => {
                                         <div className='col-md-3'>
                                             <div className='form-group'>
                                                 <label htmlFor="input-field">Category Description</label>
-                                                <input type="text" name='categoryImage' className="form-control form-control-sm" id="input-field" placeholder="Enter Category" onChange={handleChange} />
+                                                <input type="text" name='categoryDescription' className="form-control form-control-sm" id="input-field" placeholder="Enter Category" onChange={formik.handleChange} />
+                                                {formik.touched.categoryDescription && formik.errors.categoryDescription ? (
+                                                    <small className="error-message text-danger">{formik.errors.categoryDescription}</small>
+                                                ) : null}
+
                                             </div>
                                         </div>
 
                                         <div className='col-md-3'>
                                             <div className='form-group'>
                                                 <label htmlFor="input-field">Upload Category Image</label>
-                                                <input type="file" name='categoryImage' className="form-control form-control-sm" id="input-field" placeholder="Enter Category" onChange={handleChange} />
+                                                <input type="file" name='categoryImage' className="form-control form-control-sm" id="input-field" placeholder="Enter Category" onChange={(e) => handleFileUpload(e)} />
                                             </div>
                                         </div>
 
                                     </div>
                                     <div className='row mt-4 center'>
-                                        <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+                                        <button type="submit" className="btn btn-primary" onClick={formik.handleSubmit}>Submit</button>
                                     </div>
                                 </form>
                             </div>

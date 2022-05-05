@@ -51,7 +51,6 @@ function city() {
                 return
             }
             const data = saveCity(values)
-            console.log("submit data", data)
             const response = await api.saveCity(data)
             setIsLoading(true)
             if (response.data) {

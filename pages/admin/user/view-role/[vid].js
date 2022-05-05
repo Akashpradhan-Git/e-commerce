@@ -4,7 +4,7 @@ import InputField from "../../../../components/form-element/InputField";
 import MainLayout from "../../../../components/layout/main";
 import { useRouter } from 'next/router'
 import Head from "next/head";
-import * as api from '../../../../api/usersApi'
+import * as api from '../../../../services/usersApi'
 import useSWR from 'swr'
 import Spinner from "../../../../components/util/Spinner";
 

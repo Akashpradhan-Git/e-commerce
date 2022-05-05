@@ -14,7 +14,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import * as api from '../../api/usersApi'
+import * as api from '../../services/usersApi'
 
 import { useEffect } from 'react'
 import useSWR from 'swr'
@@ -54,7 +54,6 @@ const singleUser = () => {
         try {
             setIsLoading(true)
             const data = await api.getUserById(uniqueId)
-            console.log(data)
 
             setInputValue({
                 userid: data?.data.userid,
@@ -103,11 +102,9 @@ const singleUser = () => {
 
         onSubmit: async values => {
             const formData = submitData(values)
-            console.log("Foem", formData)
             try {
                 setIsLoading(true)
                 const data = await api.updateUser(uniqueId, formData)
-                console.log(data)
 
                 if (data.outcome) {
                     setIsLoading(false)
@@ -124,12 +121,10 @@ const singleUser = () => {
             }
         },
     });
-    console.log("Formik", formik.values)
     // ! Update User
     function submitData(values) {
 
         const dateOfbirth = dateOfBirth ? moment(dateOfBirth).format('DD/MM/YYYY').toString() : ""
-        console.log("dateOfbirth", dateOfbirth)
         const formData = { ...values, dateOfbirth, userRoleHcMapId, userid, isPrimary }
         return formData
     }
@@ -159,7 +154,6 @@ const singleUser = () => {
     //TODO : Get Role Data from API
     const { data } = useSWR('/api/user/roles', api.getRoleList);
     const { data: role } = useSWR(['/api/user/role:id', uniqueId], () => api.getUserRoleById(uniqueId));
-    console.log("dateOfBirth", dateOfBirth)
     if (isLoading)
         return <Spinner />
 

@@ -1,6 +1,5 @@
 import { AiOutlineDelete } from "react-icons/ai";
 const TableRows = ({ rowsData, deleteTableRows, handleChange, selectValue, isEdit = false }) => {
-    console.log(rowsData);
     return (
         rowsData?.map((data, index) => {
             const { pRole, role, status } = data;
