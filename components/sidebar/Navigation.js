@@ -2,10 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 const Navigation = ({ menu }) => {
-    //    user wise menu 
 
-    const user = 'admin'
-    const menuList = menu.filter(item => item.user === user)
     const router = useRouter();
     return (
         <>
