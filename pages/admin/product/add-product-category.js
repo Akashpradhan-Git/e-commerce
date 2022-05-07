@@ -47,10 +47,8 @@ const addProductCategory = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             const data = categoryData(values)
-            console.log(data)
             setLoading(true)
             const response = await api.saveProductCategory(data)
-            console.log(response)
             if (response && response.data) {
                 setLoading(false)
                 toast.success(response.message)

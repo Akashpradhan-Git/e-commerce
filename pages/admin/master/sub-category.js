@@ -15,7 +15,6 @@ function subCategory() {
     const [option, setOption] = useState({})
 
     function onChangeInput(value) {
-        console.log(value);
     }
     async function getOption() {
         const res = await axios.get('https://jsonplaceholder.typicode.com/users')

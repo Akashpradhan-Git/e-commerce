@@ -29,10 +29,6 @@ function addProductAttribute() {
     const { data, error, isError, mutate } = useSWR('/product-master/get-all-p-categories', api.getProductCategory);
     // console.log(error.response.status)
 
-    console.log(data, error, isError)
-
-
-
     const options = []
     if (data) {
         data.map(d => {
