@@ -6,7 +6,7 @@
 
 
 import axios from "../config/axiosInstance";
-import getToken from '../config/getToken';
+import { getToken } from '../config/getLocalData';
 
 
 //TODO: SAVE Country Details

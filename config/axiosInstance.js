@@ -6,11 +6,6 @@ import { API_HOST } from "../services/api"
 
 const Instance = axios.create({
     baseURL: `${API_HOST}`,
-    headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "*",
-        "Access-Control-Allow-Methods": "*"
-    }
+
 })
 export default Instance

@@ -9,7 +9,7 @@ import PageName from '../../components/page_components/PageName'
 import MainLayout from '../../components/layout/main'
 import Spinner from '../../components/util/Spinner'
 import Pagination from '../../components/pagination/Pagination'
-import getToken from '../../config/getToken'
+import { getToken } from '../../config/getLocalData'
 import * as api from '../../services/usersApi'
 import useSWR from 'swr'
 

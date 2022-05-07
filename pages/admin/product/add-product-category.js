@@ -47,10 +47,11 @@ const addProductCategory = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             const data = categoryData(values)
-
+            console.log(data)
             setLoading(true)
             const response = await api.saveProductCategory(data)
-            if (response.data) {
+            console.log(response)
+            if (response && response.data) {
                 setLoading(false)
                 toast.success(response.message)
                 resetForm()
@@ -66,7 +67,7 @@ const addProductCategory = () => {
         const data = {
             ...values,
             categoryImage: postImage.categoryImage,
-            parentCategory: categoryMap.value ? categoryMap.value : null
+            parentCategoryId: categoryMap.value ? categoryMap.value : null
         }
         return data
     }
@@ -81,7 +82,6 @@ const addProductCategory = () => {
             })
         })
     }
-    console.log(loading)
     if (loading)
         return <Spinner />
 
@@ -99,8 +99,7 @@ const addProductCategory = () => {
                                 <h4>Add Product Category</h4>
                             </div>
                             <div className="card-body">
-                                <form id="create-course-form">
-
+                                <form>
                                     <div className='row'>
                                         <div className='col-md-3'>
                                             <div className='form-group'>

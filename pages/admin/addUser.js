@@ -223,22 +223,7 @@ const addUser = () => {
                                         </div>
                                     </div>
 
-                                    {/* <div className="row">
-                                        <table className="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Sl#</th>
-                                                    <th>Primary Role</th>
-                                                    <th>Role</th>
-                                                    <th>Status</th>
-                                                    <th><button className="btn btn-outline-success" type='button' onClick={addTableRows} ><AiOutlinePlus /></button></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <TableRows rowsData={rowsData} deleteTableRows={deleteTableRows} handleChange={handleRowChange} selectValue={data} />
-                                            </tbody>
-                                        </table>
-                                    </div> */}
+
                                     <div className='row mt-4 center'>
                                         <button type="submit" className="btn btn-primary" onClick={formik.handleSubmit}>Submit</button>
                                     </div>

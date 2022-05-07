@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import TopNav from "../header/TopNav";
 import Sidebar from '../sidebar/SIdebarItem'
 import DefaultLayout from "../layout/default";
-import getToken from "../../config/getToken";
+import { getToken } from "../../config/getLocalData";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 export default function MainLayout({ children }) {

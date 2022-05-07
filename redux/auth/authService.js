@@ -24,7 +24,8 @@ const login = async (userData) => {
 
 // Logout user
 const logout = () => {
-    localStorage.removeItem('user')
+    localStorage.removeItem('user');
+    localStorage.removeItem('userName');  //FIXME: remove this line after development and store user in state
 }
 
 

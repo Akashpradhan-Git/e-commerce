@@ -33,6 +33,7 @@ export default function Home() {
     if (user) {
       const role = decodeToken(user)
       dispatch(setUser(role.sub))
+      localStorage.setItem('userName', JSON.stringify(role.sub));  //FIXME: remove this line after development and store user in state
       switch (role.sub) {
         case "admin":
           router.push("/admin/dashboard")
@@ -95,9 +96,8 @@ export default function Home() {
           <div className={style.overlay_container}>
             <div className={style.overlay}>
               <div className={`${style.overlay_panel} ${style.overlay_right}`}>
-                <h1 className={style.h1}>Hello, Friend!</h1>
-                <p className={style.p}>Enter your personal details and start journey with us</p>
-                <button className={`${style.button} ${style.ghost}`} id="signUp">Sign Up</button>
+                <h1 className={style.h1}>e-Commerce</h1>
+                <p className={style.p}>An E-commerce platform that you can build livelihood from</p>
               </div>
             </div>
           </div>
