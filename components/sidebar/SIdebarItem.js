@@ -1,13 +1,19 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Navigation from './Navigation'
 import { adminMenu, sellerMenu } from '../../script/menuList'
 import { getUserName } from '../../config/getLocalData'
+
 const SIdebarItem = () => {
-    const userName = getUserName();
+    const [userName, setUserName] = useState("")
+    const uname = useSelector((state) => state.user.userName);
+
+    useEffect(() => {
+        setUserName(getUserName())
+    }, []);
 
     const getMenuList = () => {
-        if (userName === 'admin') {
+        if (uname === 'admin' || userName === 'admin') {
             return adminMenu;
         }
         else if (userName === 'system') {
@@ -18,7 +24,7 @@ const SIdebarItem = () => {
         }
     }
 
-    const menuList = getMenuList();
+    let menuList = getMenuList();
 
     const menu = useSelector((state) => state.switchMenu.menu);
     return (

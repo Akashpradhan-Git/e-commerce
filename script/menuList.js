@@ -103,20 +103,27 @@ export const adminMenu = [{
 
 export const sellerMenu = [
     {
-        name: 'User Management',
-        collapseId: 'user-management',
+        name: 'Dashboard',
+        url: '/seller/dashboard-seller',
+        icon: 'icon-grid menu-icon',
+        isParents: false,
+        subMenu: [],
+    },
+    {
+        name: 'Product',
+        collapseId: 'user-product',
         icon: 'icon-grid menu-icon',
         isParents: true,
         subMenu: [
             {
 
-                name: "Add User",
-                url: "/admin/addUser",
+                name: "Add Product",
+                url: "/seller/products/add-product",
                 isParents: false,
             },
             {
-                name: "View User",
-                url: "/admin/viewUser",
+                name: "View Product",
+                url: "/seller/products/viewUser",
                 isParents: false,
             },
         ],

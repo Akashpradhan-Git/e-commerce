@@ -39,7 +39,7 @@ export default function Home() {
           router.push("/admin/dashboard")
           break;
         case "system":
-          router.push("/admin/addUser")
+          router.push("/seller/dashboard-seller")
           break;
         default:
           break;

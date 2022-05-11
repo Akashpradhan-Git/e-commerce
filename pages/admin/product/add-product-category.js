@@ -47,6 +47,7 @@ const addProductCategory = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             const data = categoryData(values)
+            console.log(data)
             setLoading(true)
             const response = await api.saveProductCategory(data)
             if (response && response.data) {

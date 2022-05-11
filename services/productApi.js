@@ -42,7 +42,7 @@ export const getProductCategory = async () => {
         return data.data;
     } catch (error) {
         console.log(error)
-        window.location.href = '/'
+        // window.location.href = '/'
     }
 }
 
@@ -94,3 +94,42 @@ export const saveBrand = async (payload) => {
 
 
 
+
+// TODO: Get all header Product categories
+
+// * Deep down api call is made to get all product categories
+
+
+export const getAllProductCategories = async () => {
+    try {
+        const token = getToken()
+        const { data } = await axios.get(`product-master/get-all-headers-p-categories`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return data.data;
+    } catch (error) {
+        console.log(error)
+        // window.location.href = '/'
+    }
+}
+
+
+
+export const getAllSubCategories = async (categoryId) => {
+    try {
+        const token = getToken()
+        const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return data;
+    } catch (error) {
+        console.log(error)
+        // window.location.href = '/'
+    }
+}
