@@ -17,11 +17,13 @@ import { convertToBase64 } from '../../../util/base64'
 
 const addProductCategory = () => {
 
-
     const [loading, setLoading] = useState(false)
     const [postImage, setPostImage] = useState({
         categoryImage: "",
     });
+
+
+
     const [categoryMap, setCategoryMap] = useState("")
 
 
@@ -70,6 +72,7 @@ const addProductCategory = () => {
         }
         return data
     }
+
 
 
     const options = []
@@ -128,6 +131,8 @@ const addProductCategory = () => {
 
                                             </div>
                                         </div>
+
+
 
                                         <div className='col-md-3'>
                                             <div className='form-group'>
