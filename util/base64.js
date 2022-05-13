@@ -5,7 +5,9 @@ export const convertToBase64 = (file) => {
         const fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = () => {
-            resolve(fileReader.result);
+            let extention = file.name.split('.').pop();
+            let base64 = fileReader.result.split(',')[1];
+            resolve(base64 + '_' + extention);
         };
         fileReader.onerror = (error) => {
             reject(error);

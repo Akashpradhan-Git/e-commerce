@@ -21,6 +21,8 @@ const addProductCategory = () => {
     const [postImage, setPostImage] = useState({
         categoryImage: "",
     });
+    const [isHeader, setIsHeader] = useState(false); // loading state
+
 
 
 
@@ -49,7 +51,6 @@ const addProductCategory = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             const data = categoryData(values)
-            console.log(data)
             setLoading(true)
             const response = await api.saveProductCategory(data)
             if (response && response.data) {
@@ -67,10 +68,15 @@ const addProductCategory = () => {
     const categoryData = (values) => {
         const data = {
             ...values,
+            isHeader,
             categoryImage: postImage.categoryImage,
             parentCategoryId: categoryMap.value ? categoryMap.value : null
         }
         return data
+    }
+
+    const handleCheckbox = (e) => {
+        setIsHeader(e.target.checked)
     }
 
 
@@ -121,16 +127,7 @@ const addProductCategory = () => {
                                                 label="Add Category Map"
                                             />
                                         </div>
-                                        <div className='col-md-3'>
-                                            <div className='form-group'>
-                                                <label htmlFor="input-field">Category Description</label>
-                                                <input type="text" name='categoryDescription' className="form-control form-control-sm" id="input-field" placeholder="Enter Category" onChange={formik.handleChange} />
-                                                {formik.touched.categoryDescription && formik.errors.categoryDescription ? (
-                                                    <small className="error-message text-danger">{formik.errors.categoryDescription}</small>
-                                                ) : null}
 
-                                            </div>
-                                        </div>
 
 
 
@@ -138,6 +135,28 @@ const addProductCategory = () => {
                                             <div className='form-group'>
                                                 <label htmlFor="input-field">Upload Category Image</label>
                                                 <input type="file" name='categoryImage' className="form-control form-control-sm" id="input-field" placeholder="Enter Category" onChange={(e) => handleFileUpload(e)} />
+                                            </div>
+                                        </div>
+
+                                        <div className='col-md-2'>
+                                            <label htmlFor="input-field">Is Header</label>
+                                            <div className="onoffswitch">
+                                                <input type="checkbox" name="isHeader" className="onoffswitch-checkbox" id="myonoffswitch" tabIndex="0" onChange={handleCheckbox} />
+                                                <label className="onoffswitch-label" htmlFor="myonoffswitch">
+                                                    <span className="onoffswitch-inner"></span>
+                                                    <span className="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className='col-md-4'>
+                                            <div className='form-group'>
+                                                <label htmlFor="input-field">Category Description</label>
+                                                <input type="text" name='categoryDescription' className="form-control form-control-sm" id="input-field" placeholder="Enter Category" onChange={formik.handleChange} />
+                                                {formik.touched.categoryDescription && formik.errors.categoryDescription ? (
+                                                    <small className="error-message text-danger">{formik.errors.categoryDescription}</small>
+                                                ) : null}
+
                                             </div>
                                         </div>
 

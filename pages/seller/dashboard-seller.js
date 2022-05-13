@@ -17,12 +17,6 @@ const dashboardSeller = () => {
         <h1>Dashboard</h1>
 
 
-
-        <Link href='/admin/[id]' as="/admin/1">
-          <a className="btn btn-sm btn-primary">
-            GO
-          </a>
-        </Link>
       </PageLayout>
     </>
   )

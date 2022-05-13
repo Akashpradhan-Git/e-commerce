@@ -27,8 +27,6 @@ function addProductAttribute() {
     const [formData, setFormData] = useState(null)
 
     const { data, error, isError, mutate } = useSWR('/product-master/get-all-p-categories', api.getProductCategory);
-    // console.log(error.response.status)
-
     const options = []
     if (data) {
         data.map(d => {
