@@ -109,6 +109,7 @@ export const sellerMenu = [
         isParents: false,
         subMenu: [],
     },
+
     {
         name: 'Product',
         collapseId: 'user-product',
@@ -128,4 +129,5 @@ export const sellerMenu = [
             },
         ],
     },
+
 ]

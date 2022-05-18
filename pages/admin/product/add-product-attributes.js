@@ -62,14 +62,7 @@ function addProductAttribute() {
             value: 'dropdown',
             label: 'Dropdown'
         },
-        {
-            value: 'file',
-            label: 'File'
-        },
-        {
-            value: 'date',
-            label: 'Date'
-        },
+
     ]
 
     const generateFields = () => {
@@ -79,8 +72,8 @@ function addProductAttribute() {
                 fields.push(
                     <div className='col-md-3' key={i}>
                         <div className="form-group">
-                            <label htmlFor="input-field">{`Type of Category ${i}`}</label>
-                            <input type='text' className="form-control form-control-sm" placeholder='Placeholder Name' name={`input${i}`} onBlur={handleBlur} />
+                            <label htmlFor="input-field">{`Attribute Name ${i}`}</label>
+                            <input type='text' className="form-control form-control-sm" placeholder='Placeholder Name' name={`input`} onBlur={handleBlur} />
                         </div>
                     </div>
                 )
@@ -88,24 +81,14 @@ function addProductAttribute() {
             if (type.formType === 'dropdown') {
                 fields.push(
                     <div className='col-md-3' key={i}>
-                        <InputField name={`field${i + 1}`} type="text" label={`Field ${i + 1}`} placeholder={`field${i + 1}`} value="" onChange={handledynamicFields} />
+                        <div className="form-group">
+                            <label htmlFor="input-field">{`Type of Category ${i}`}</label>
+                            <input type='text' className="form-control form-control-sm" placeholder='Placeholder Name' name={`input`} onBlur={handleBlur} />
+                        </div>
                     </div>
                 )
             }
-            if (type.formType === 'file') {
-                fields.push(
-                    <div className='col-md-3' key={i}>
-                        <InputField name={`field${i + 1}`} type="file" label={`Field ${i + 1}`} placeholder={`field${i + 1}`} value="" onChange={handledynamicFields} />
-                    </div>
-                )
-            }
-            if (type.formType === 'date') {
-                fields.push(
-                    <div className='col-md-3' key={i}>
-                        <InputField name={`field${i + 1}`} type="date" label={`Field ${i + 1}`} placeholder={`field${i + 1}`} value="" onChange={handledynamicFields} />
-                    </div>
-                )
-            }
+
         }
         setFormData(fields)
     }
@@ -113,6 +96,7 @@ function addProductAttribute() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = categoryData()
+        console.log(data)
         setIsLoading(true)
         if (type.attribute === '' || type.formType === '' || type.noOfFields === '' || type.description === '' && !isVariant && categoryName === '') {
             toast.error("Please fill all the fields")
@@ -122,8 +106,11 @@ function addProductAttribute() {
         const res = await api.saveCategoryAttribute(data)
         if (res && res.data) {
             toast.success("Category Attribute added successfully")
+            setDynamicFields([])
             setIsLoading(false)
         }
+
+
     }
 
     const categoryData = () => {

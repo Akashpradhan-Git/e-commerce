@@ -10,15 +10,19 @@ import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import CustomSelect from '../../../components/form-element/CustomSelect'
 import useSWR from 'swr'
 import { convertToBase64 } from '../../../util/base64'
 import { v4 as uuidv4 } from 'uuid';
-import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai'
+import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
+import { setCode } from '../../../redux/productSlice'
+import { useDispatch } from 'react-redux';
+
 const addProduct = () => {
-
+    const router = useRouter()
     const refContainer = useRef(null);
-
+    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false); // loading state
     // const [categoryMap, setCategoryMap] = useState([]);
     // const [dynamicOption, setDynamicOption] = useState({});
@@ -71,7 +75,7 @@ const addProduct = () => {
         onSubmit: async (values, { resetForm }) => {
 
             const payload = submitData(values)
-            console.log(payload)
+            // console.log(payload)
             if (payload.materialType === "" || payload.materialType === undefined ||
                 payload.category.categoryCode === "" || payload.category.categoryCode === undefined ||
                 payload.productType === "" || payload.productType === undefined) {
@@ -79,20 +83,26 @@ const addProduct = () => {
                 return false
             }
             const response = await api.saveProduct(payload)
-            console.log("Response", response)
-
             setIsLoading(true)
             if (response && response.data) {
                 toast.success(response.message)
                 setIsLoading(false)
                 resetForm()
+                console.log(response)
+                dispatch(setCode(response.data.productCode))
+                setTimeout(() => {
+                    router.push('/seller/products/add-product-variant')
+                }, 1000);
             }
             else {
                 toast.error("Product Not Added")
                 setIsLoading(false)
             }
+
+
         },
     });
+
     const submitData = (values) => {
 
         const formData = {
@@ -106,7 +116,7 @@ const addProduct = () => {
                 brandId: brand.value
             },
             productCode: null,
-            productImages: [productImage]
+            // productImages: [productImage]
         }
         return formData
     }
@@ -123,7 +133,6 @@ const addProduct = () => {
     let r = [];
     const handleCategoryChange = async (e) => {
         const [name, value] = e.target;
-        console.log("name", name, "value", value)
         setStoreId(v => [...v, value.value])
         fetchData(value);
 
@@ -220,7 +229,7 @@ const addProduct = () => {
         let file = e.target.files[0];
         const base64 = file ? await convertToBase64(file) : "";
         setImage(newFormValues);
-        setProductImage({ ...productImage, [i]: base64 });
+        setProductImage({ ...productImage, ["image" + i]: base64 });
     }
     let removeImage = (i) => {
         let newFormValues = [...image];
@@ -360,7 +369,7 @@ const addProduct = () => {
                                         }
                                     </div>
                                     <div className='row mt-4 center'>
-                                        <button type="submit" className="btn btn-primary" onClick={formik.handleSubmit}>Submit</button>
+                                        <button type="submit" className="btn btn-primary" onClick={formik.handleSubmit}>Next</button>
                                     </div>
                                 </form>
                             </div>

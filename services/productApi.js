@@ -175,3 +175,44 @@ export const saveProduct = async (payload) => {
 }
 
 
+
+
+// TODO: Get all products variation details by product id
+
+export const getAllProductVariant = async (productCode) => {
+    try {
+        const token = getToken()
+        const { data } = await axios.get(`/product-master/get-all-p-cat-variant-attributes/${productCode}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return data.data;
+    } catch (error) {
+        console.log(error)
+        // window.location.href = '/'
+    }
+}
+
+
+
+//TODO: SAVE Product variant attribute details
+
+export const addProductVariantAttribute = async (payload) => {
+    try {
+        const token = getToken()
+        let { data } = await axios.post('/product-master/add-update-p-cat-variant-attributes', payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+        return data;
+    } catch (error) {
+        console.log(error)
+        // window.location.href = '/'
+    }
+}
