@@ -1,17 +1,16 @@
-import { useState } from 'react'
+import { PageLayout, PageName, MainLayout, InputField, Spinner } from '../../components/index'
+import * as api from '../../services/usersApi'
+
 import Head from 'next/head'
-import PageLayout from '../../components/layout/pageLayout'
-import PageName from '../../components/page_components/PageName'
-import MainLayout from '../../components/layout/main'
+import { useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import InputField from '../../components/form-element/InputField'
 import { FaEdit, FaEye } from 'react-icons/fa'
 import Link from 'next/link'
 import useSWR from 'swr'
-import Spinner from '../../components/util/Spinner'
 import { toast } from 'react-toastify'
-import * as api from '../../services/usersApi'
+
+
 
 const roleList = () => {
     const [isLoading, setIsLoading] = useState(false); // loading state

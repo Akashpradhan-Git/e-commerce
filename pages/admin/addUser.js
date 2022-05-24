@@ -1,25 +1,20 @@
-import React, { useState } from 'react'
-import PageLayout from '../../components/layout/pageLayout'
-import PageName from '../../components/page_components/PageName'
-import MainLayout from '../../components/layout/main'
-import InputField from '../../components/form-element/InputField'
+import { PageLayout, PageName, MainLayout, InputField, Spinner } from '../../components/index'
+import * as api from '../../services/usersApi'
+
+import { useState } from 'react'
 import Head from 'next/head'
-import TableRows from '../../components/table/TableRows'
-import { AiOutlinePlus } from "react-icons/ai";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import * as api from '../../services/usersApi'
-import Spinner from '../../components/util/Spinner'
 import useSWR from 'swr'
 
-//! FIXME Use React mutation hook
+
+//FIXME: Use React mutation hook
 const addUser = () => {
     const [dob, setDob] = useState("");
-    const [rowsData, setRowsData] = useState([]); // table rows data
     const [isLoading, setIsLoading] = useState(false); // loading state
     //! User Validation
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -66,8 +61,7 @@ const addUser = () => {
     }
 
 
-    //TODO : Get Role Data from API and Pass to Dynamic Select Field
-
+    //TODO: Get Role Data from API and Pass to Dynamic Select Field
 
     const { data } = useSWR('/api/user/role', api.getRoleList);
     if (isLoading) return <Spinner />

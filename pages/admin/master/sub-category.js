@@ -1,14 +1,7 @@
-import PageLayout from '../../../components/layout/pageLayout'
-import PageName from '../../../components/page_components/PageName'
-import MainLayout from '../../../components/layout/main'
-import InputField from '../../../components/form-element/InputField'
 import Head from 'next/head'
-import CustomSelect from '../../../components/form-element/CustomSelect'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-
-
-
+import { PageLayout, PageName, MainLayout, InputField, CustomSelect } from '../../../components/index'
 
 function subCategory() {
 

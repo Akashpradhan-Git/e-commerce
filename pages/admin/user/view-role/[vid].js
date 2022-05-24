@@ -1,12 +1,11 @@
-import PageLayout from "../../../../components/layout/pageLayout";
-import PageName from "../../../../components/page_components/PageName";
-import InputField from "../../../../components/form-element/InputField";
-import MainLayout from "../../../../components/layout/main";
+import { PageLayout, PageName, MainLayout, InputField, CustomSelect, Spinner } from '../../../../components/index'
+import * as api from '../../../../services/usersApi'
+
 import { useRouter } from 'next/router'
 import Head from "next/head";
-import * as api from '../../../../services/usersApi'
 import useSWR from 'swr'
-import Spinner from "../../../../components/util/Spinner";
+
+
 
 
 function viewRole() {

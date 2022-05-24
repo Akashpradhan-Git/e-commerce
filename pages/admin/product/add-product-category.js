@@ -1,18 +1,14 @@
-import PageLayout from '../../../components/layout/pageLayout'
-import PageName from '../../../components/page_components/PageName'
-import MainLayout from '../../../components/layout/main'
-import InputField from '../../../components/form-element/InputField'
+import { PageLayout, PageName, MainLayout, InputField, CustomSelect, Spinner } from '../../../components/index'
+import { GetProductCat } from '../../../components/page_components/index'
+import { convertToBase64 } from '../../../util/base64'
 import * as api from '../../../services/productApi'
-import Spinner from '../../../components/util/Spinner'
+
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useState } from 'react';
-import CreatableSelect from 'react-select/creatable';
-import CustomSelect from '../../../components/form-element/CustomSelect'
 import useSWR from 'swr'
-import { convertToBase64 } from '../../../util/base64'
 
 
 const addProductCategory = () => {
@@ -168,6 +164,9 @@ const addProductCategory = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className='row'>
+                    <GetProductCat />
                 </div>
             </PageLayout>
         </>

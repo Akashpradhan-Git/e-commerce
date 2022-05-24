@@ -1,14 +1,10 @@
-import PageLayout from '../../../components/layout/pageLayout'
-import PageName from '../../../components/page_components/PageName'
-import MainLayout from '../../../components/layout/main'
-import InputField from '../../../components/form-element/InputField'
+import { PageLayout, PageName, MainLayout, InputField, CustomSelect } from '../../../components/index'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import useSWR from 'swr'
 import * as Yup from 'yup'
 import * as api from '../../../services/masterApi'
-import CustomSelect from '../../../components/form-element/CustomSelect'
 import { useState } from 'react'
 import swal from 'sweetalert';
 

@@ -26,14 +26,29 @@ export const saveProductCategory = async (payload) => {
 }
 
 
-
-
-
 //TODO: List Product List Details
 export const getProductCategory = async () => {
     try {
         const token = getToken()
         const { data } = await axios.get(`/product-master/get-all-p-categories`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return data.data;
+    } catch (error) {
+        console.log(error)
+        // window.location.href = '/'
+    }
+}
+
+
+// TODO: GET Single Product Category By Id
+export const getProductCategoryById = async (id) => {
+    try {
+        const token = getToken()
+        const { data } = await axios.get(`/product-master/get-p-category-details/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
@@ -211,6 +226,24 @@ export const addProductVariantAttribute = async (payload) => {
             });
 
         return data;
+    } catch (error) {
+        console.log(error)
+        // window.location.href = '/'
+    }
+}
+
+//TODO: Get All Product Category Attributes
+
+export const getAllProductCategoryAttribute = async (productCode) => {
+    try {
+        const token = getToken()
+        const { data } = await axios.get(`/product-master/get-all-p-cat-attributes/${productCode}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return data.data;
     } catch (error) {
         console.log(error)
         // window.location.href = '/'

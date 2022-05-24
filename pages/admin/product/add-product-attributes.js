@@ -1,16 +1,13 @@
-import Layout from '../../../components/layout/pageLayout'
-import PageName from '../../../components/page_components/PageName'
-import MainLayout from '../../../components/layout/main'
-import InputField from '../../../components/form-element/InputField'
+import { PageLayout, PageName, MainLayout, InputField, CustomSelect, Spinner } from '../../../components/index'
 import * as api from '../../../services/productApi'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useState } from 'react';
-import Spinner from '../../../components/util/Spinner'
 import useSWR from 'swr'
-import CustomSelect from '../../../components/form-element/CustomSelect'
+
+
 
 function addProductAttribute() {
     const [isLoading, setIsLoading] = useState(false); // loading state
@@ -143,7 +140,7 @@ function addProductAttribute() {
                 <title>Add Attribute</title>
             </Head>
 
-            <Layout>
+            <PageLayout>
                 <PageName title="Add Attribute" />
 
                 <div className="row">
@@ -249,7 +246,7 @@ function addProductAttribute() {
                         </div>
                     </div>
                 </div>
-            </Layout >
+            </PageLayout >
 
         </>
     )

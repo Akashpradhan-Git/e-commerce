@@ -1,22 +1,15 @@
-import PageLayout from '../../components/layout/pageLayout'
-import PageName from '../../components/page_components/PageName'
-import MainLayout from '../../components/layout/main'
-import InputField from '../../components/form-element/InputField'
+import { PageLayout, PageName, MainLayout, InputField, Spinner } from '../../components/index'
+import * as api from '../../services/usersApi'
+
 import Head from 'next/head'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { AiOutlinePlus } from "react-icons/ai";
-import Spinner from '../../components/util/Spinner'
-import TableRows from '../../components/table/TableRows'
 import moment from 'moment'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import * as api from '../../services/usersApi'
-
-import { useEffect } from 'react'
 import useSWR from 'swr'
 
 

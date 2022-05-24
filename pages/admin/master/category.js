@@ -1,12 +1,8 @@
-import PageLayout from '../../../components/layout/pageLayout'
-import PageName from '../../../components/page_components/PageName'
-import MainLayout from '../../../components/layout/main'
-import InputField from '../../../components/form-element/InputField'
+import { PageLayout, PageName, MainLayout, InputField } from '../../../components/index'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import moment from 'moment'
 import * as api from '../../../services/masterApi'
-import Spinner from '../../../components/util/Spinner'
 import useSWR from 'swr'
 
 function category() {

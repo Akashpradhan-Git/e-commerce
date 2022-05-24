@@ -1,9 +1,6 @@
 import React from 'react'
-import PageName from '../../components/page_components/PageName'
-import PageLayout from '../../components/layout/pageLayout'
-import MainLayout from '../../components/layout/main'
 import Head from 'next/head'
-import Link from 'next/link';
+import { PageLayout, PageName, MainLayout } from '../../components/index'
 
 const dashboardSeller = () => {
 

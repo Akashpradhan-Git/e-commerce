@@ -1,14 +1,18 @@
 import style from '../styles/login.module.css';
+
+
+import Spinner from '../components/util/Spinner';
+import { login, reset } from '../redux/auth/authSlice';
+import { setUser } from '../redux/userSlice';
+
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { FaFacebook, FaLinkedin } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, reset } from '../redux/auth/authSlice';
 import { toast } from 'react-toastify';
 import Head from 'next/head';
-import Spinner from '../components/util/Spinner';
-import { setUser } from '../redux/userSlice';
 import jwt from 'jsonwebtoken'
 export default function Home() {
   const router = useRouter();

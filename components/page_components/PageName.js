@@ -1,5 +1,4 @@
-import React from 'react'
-
+import { AiOutlineHome } from 'react-icons/ai'
 const PageName = ({ title }) => {
     return (
         <>
@@ -16,9 +15,10 @@ const PageName = ({ title }) => {
                                         className="btn btn-sm btn-light bg-white"
                                         type="button"
                                         id="dropdownMenuDate2"
+                                        style={{ border: '1px solid #dbdbdb' }}
 
                                     >
-                                        <i className="mdi mdi-calendar"></i>/ {title}
+                                        <AiOutlineHome /> / {title}
                                     </button>
                                 </div>
                             </div>

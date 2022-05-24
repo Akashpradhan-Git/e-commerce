@@ -1,14 +1,10 @@
-import Layout from '../../../components/layout/pageLayout'
-import PageName from '../../../components/page_components/PageName'
-import MainLayout from '../../../components/layout/main'
-import InputField from '../../../components/form-element/InputField'
+import { PageLayout, PageName, MainLayout, InputField, Spinner } from '../../../components/index'
 import * as api from '../../../services/masterApi'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useState } from 'react';
-import Spinner from '../../../components/util/Spinner'
 
 
 function addCountry() {
@@ -44,7 +40,7 @@ function addCountry() {
                 <title>Add Country</title>
             </Head>
 
-            <Layout>
+            <PageLayout>
                 <PageName title="Add Country" />
 
                 <div className="row">
@@ -78,7 +74,7 @@ function addCountry() {
                         </div>
                     </div>
                 </div>
-            </Layout>
+            </PageLayout>
 
         </>
     )

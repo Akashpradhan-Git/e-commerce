@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import axios from "../../config/axiosInstance";
 import { API_HOST } from "../../services/api";
 
@@ -18,6 +19,7 @@ const login = async (userData) => {
         }
         return data.data;
     } catch (error) {
+        toast.error("Something went wrong");
         console.log(error);
     }
 }

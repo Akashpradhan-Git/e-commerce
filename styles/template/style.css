@@ -32688,6 +32688,7 @@ div.tagsinput span.tag a {
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
+  margin-left: 235px;
 }
 
 @media (max-width: 991px) {
@@ -32721,6 +32722,7 @@ div.tagsinput span.tag a {
   padding: 0;
   width: 235px;
   z-index: 11;
+  position: fixed;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;

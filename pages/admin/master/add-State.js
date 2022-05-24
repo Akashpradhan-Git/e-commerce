@@ -1,16 +1,12 @@
-import PageLayout from '../../../components/layout/pageLayout'
-import PageName from '../../../components/page_components/PageName'
-import MainLayout from '../../../components/layout/main'
-import InputField from '../../../components/form-element/InputField'
+import { PageLayout, PageName, MainLayout, InputField, CustomSelect, Spinner } from '../../../components/index'
+
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useSWR from 'swr'
-import CustomSelect from '../../../components/form-element/CustomSelect'
 import { useState } from 'react'
 import * as api from '../../../services/masterApi'
-import Spinner from '../../../components/util/Spinner'
 
 function addState() {
     const [option, setOption] = useState([])

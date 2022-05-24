@@ -1,13 +1,12 @@
-import PageLayout from '../../../../components/layout/pageLayout'
-import PageName from '../../../../components/page_components/PageName'
-import MainLayout from '../../../../components/layout/main'
-import InputField from '../../../../components/form-element/InputField'
+import { PageLayout, PageName, MainLayout, InputField, CustomSelect, Spinner } from '../../../../components/index'
+import * as api from '../../../../services/usersApi'
+
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import moment from 'moment'
-import * as api from '../../../../services/usersApi'
-import Spinner from '../../../../components/util/Spinner'
 import useSWR from 'swr'
+
+
 
 const singleUser = () => {
     const router = useRouter()

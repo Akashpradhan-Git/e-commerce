@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { PageLayout, PageName, MainLayout, Spinner, Pagination } from '../../components/index'
+import { getToken } from '../../config/getLocalData'
+import * as api from '../../services/usersApi'
+
+import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { FaEdit, FaEye } from 'react-icons/fa'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { toast } from 'react-toastify'
-import PageLayout from '../../components/layout/pageLayout'
-import PageName from '../../components/page_components/PageName'
-import MainLayout from '../../components/layout/main'
-import Spinner from '../../components/util/Spinner'
-import Pagination from '../../components/pagination/Pagination'
-import { getToken } from '../../config/getLocalData'
-import * as api from '../../services/usersApi'
 import useSWR from 'swr'
 
 
@@ -30,8 +27,6 @@ const viewUser = () => {
 
     //* Get user list
     const { data, error, isLoading, isError } = useSWR('/api/user/view', api.getUsersList);
-
-
     if (isError) {
         toast.warn("failed to load")
     }
