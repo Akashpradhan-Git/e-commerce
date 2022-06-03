@@ -17,20 +17,19 @@ function SellerAddProductVariant({ handleNext, handleBack }) {
 
     const { productCode } = useSelector(state => state.product)
     console.log("productCode", productCode)
+
+
+
     useEffect(() => {
         async function fetchDataByCode() {
             if (productCode) {
-                // get data from api
-                // console.log('productCode', productCode)
                 const response = await api.getAllProductVariant(productCode)
                 setData(response)
-                // setAttr(response.map(item => item.attributeName))
             } else {
+                // FIXME: in else case, redirect to home page
                 const response = await api.getAllProductVariant("PRODEE174")
                 console.log('response', response)
                 setData(response)
-
-                // setAttr(response.map(item => { item.attributeFields.attributeName }))
             }
         }
         fetchDataByCode()
@@ -88,6 +87,7 @@ function SellerAddProductVariant({ handleNext, handleBack }) {
                             <form>
                                 {
                                     data?.map((item, index) => {
+
                                         return (
                                             <div className='row' key={index}>
                                                 <div className='col-md-12'>
@@ -104,10 +104,13 @@ function SellerAddProductVariant({ handleNext, handleBack }) {
 
                                                 <div className='col-md-9 mt-4'>
                                                     <div className='row'>
+
                                                         {
                                                             item.attributeFields.formType === 'input' ? <>
                                                                 {
+
                                                                     item.attributeFields.dynamicFields.map((dyValue, index) => {
+
                                                                         return (
                                                                             <div className='col-md-3' key={index}>
                                                                                 <InputField

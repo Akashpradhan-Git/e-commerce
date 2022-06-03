@@ -15305,9 +15305,10 @@ input[type="button"].btn-block {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  color: #1F1F1F;
-  background-color: #ffffff;
-  border-color: #ebedf2 #ebedf2 #ffffff;
+  color: #683bb8;
+    /* background-color: #673ab7; */
+    /* border-color: #673ab7 #673ab7 #673ab7; */
+    border-bottom: 3px solid;
 }
 
 .nav-tabs .dropdown-menu {
@@ -28662,7 +28663,9 @@ dl li {
   color: #000000;
   border-radius: 0;
   border: 1px solid #CED4DA;
-  padding: .75rem 1.5rem;
+  padding: 7px 16px;
+  width: 100px;
+    text-align: center;
 }
 
 @media (max-width: 767px) {
@@ -28838,7 +28841,7 @@ dl li {
 }
 
 .tab-content {
-  border: 1px solid #CED4DA;
+ 
   border-top: 0;
   padding: 2rem 1rem;
   text-align: justify;

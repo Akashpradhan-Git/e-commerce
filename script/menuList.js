@@ -123,8 +123,8 @@ export const sellerMenu = [
                 isParents: false,
             },
             {
-                name: "View Product",
-                url: "/seller/products/viewUser",
+                name: "Publish Product",
+                url: "/seller/products/publish-product",
                 isParents: false,
             },
         ],

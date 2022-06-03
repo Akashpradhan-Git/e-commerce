@@ -1,0 +1,49 @@
+.accordion {
+    max-width: calc(100% - 3vw);
+    margin: 20px auto;
+}
+
+.in .banner img {
+    position: relative;
+}
+
+.in .banner h1 {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-family: "Lora", sans-serif;
+    letter-spacing: 1.3px;
+    font-size: 2rem;
+}
+
+ul.uiTab {
+    width: 60%;
+    margin: 0 auto 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #8461c1;
+    border-radius: 2rem;
+}
+
+ul.uiTab li {
+    width: 50%;
+    padding: 1rem;
+    list-style: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.7s;
+    border-radius: 2rem;
+}
+
+ul.uiTab li:hover {
+    background: rgba(50, 224, 196, 0.15);
+    
+}
+
+ul.uiTab .active {
+        background: #8461c1;
+            color: #fff;
+}

@@ -2,6 +2,7 @@ import { PageLayout, PageName, MainLayout } from '../../../components/index'
 import { AddProduct, AddAttributes, SellerAddProductVariant } from '../../../components/page_components/index'
 import { useState } from 'react'
 import style from '../../../styles/custom.module.css'
+import Head from 'next/head'
 const addProduct = () => {
     // const dispatch = useDispatch();
     // const handleNext = () => {
@@ -11,7 +12,7 @@ const addProduct = () => {
     //     dispatch(setPreviousPageStep())
     // }
 
-    const [step, setStep] = useState(3)
+    const [step, setStep] = useState(1)
 
     const handleNext = () => {
         setStep(step + 1)
@@ -23,6 +24,9 @@ const addProduct = () => {
 
     return (
         <>
+            <Head>
+                <title>Add Product</title>
+            </Head>
             <PageLayout>
                 <PageName title="Add Product" />
                 <ul className={style.steps}>
@@ -34,10 +38,10 @@ const addProduct = () => {
                         <span className={style.step__icon}></span>
                         <span className={style.step__label}>Step 2</span>
                     </li>
-                    <li className={`${style.step} ${style.step__incomplete} ${step == 3 ? style.step__active : style.step__inactive}`}>
+                    {/* <li className={`${style.step} ${style.step__incomplete} ${step == 3 ? style.step__active : style.step__inactive}`}>
                         <span className={style.step__icon}></span>
                         <span className={style.step__label}>Step 3</span>
-                    </li>
+                    </li> */}
                     {/* <li className={`${style.step} ${style.step__incomplete} ${step == 4 ? style.step__active : style.step__inactive}`}>
                         <span className={style.step__icon}></span>
                         <span className={style.step__label}>Step 4</span>
@@ -48,12 +52,12 @@ const addProduct = () => {
                     step === 1 ?
                         <AddProduct handleNext={handleNext} />
                         :
-                        step === 2 ?
-                            <SellerAddProductVariant handleNext={handleNext} handleBack={handleBack} />
-                            :
-                            step === 3 ?
-                                <AddAttributes handleBack={handleBack} />
-                                : ""
+                        step === 2 &&
+                        <AddAttributes handleBack={handleBack} />
+
+                    // step === 3 ?
+                    //     <AddAttributes handleBack={handleBack} />
+                    //     : ""
                     //     step === 4 ?
                     //         <AddProductStep4 handleBack={handleBack} />
                     //         : ""

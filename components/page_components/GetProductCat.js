@@ -4,23 +4,25 @@ import * as api from '../../services/productApi'
 import DataTable from 'react-data-table-component';
 import Link from 'next/link'
 import { FaEdit } from 'react-icons/fa';
+import { Spinner } from '../index'
 function GetProductCat() {
 
     const { data, error, isError, mutate } = useSWR('/api/user/role', api.getProductCategory);
+
+    if (isError) return <div>failed to load</div>
+    if (!data) return <Spinner />
+
+
     const tableRow = data?.map((item, index) => {
         return {
             id: index + 1,
             categoryCode: item.categoryCode,
             categoryName: item.categoryName,
             categoryDescription: item.categoryDescription,
-            isHeader: item.isHeader.toString(),
-            categoryImage: item.categoryImage,
+            isHeader: item?.isHeader.toString(),
+            categoryImage: item?.categoryImage.toString(),
         }
     })
-
-    const handleEdit = (item) => {
-        console.log(item)
-    }
 
     const columns = [
         {

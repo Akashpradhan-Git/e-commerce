@@ -80,13 +80,13 @@ function AddProductStep({ handleNext }) {
                 return false
             }
             const response = await api.saveProduct(payload)
-
+            console.log(response)
             setIsLoading(true)
             if (response && response.data) {
                 toast.success(response.message)
                 setIsLoading(false)
                 resetForm()
-                console.log(response)
+
                 dispatch(setCode(response.data.productCode))
                 dispatch(setCategoryCode(response.data.category.categoryCode))
                 // setTimeout(() => {
@@ -132,6 +132,7 @@ function AddProductStep({ handleNext }) {
 
     let r = [];
     const handleCategoryChange = async (e) => {
+
         const [name, value] = e.target;
         setStoreId(v => [...v, value.value])
         fetchData(value);
@@ -160,6 +161,7 @@ function AddProductStep({ handleNext }) {
 
     const fetchData = async (value) => {
         const response = await api.getAllSubCategories(value.value)
+
         let dropdownData = []
 
         if (response && response.data.length > 0) {
@@ -215,6 +217,9 @@ function AddProductStep({ handleNext }) {
         }
         return prodOptions
     }
+
+
+
     // TODO: append image to the product
     const [image, setImage] = useState([{ images: "" }])
 
@@ -355,7 +360,7 @@ function AddProductStep({ handleNext }) {
                                     }
                                 </div>
                                 <div className='row mt-4 center'>
-                                    <button type="submit" className="btn btn-sm btn-primary" onClick={formik.handleSubmit}>Next</button>
+                                    <button type="submit" className="btn btn-sm btn-primary" onClick={formik.handleSubmit}>Submit & Next</button>
                                 </div>
                             </form>
                         </div>

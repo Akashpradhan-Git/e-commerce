@@ -1,18 +1,31 @@
 import Head from 'next/head'
-import { PageLayout, PageName, MainLayout, InputField, Spinner } from '../../../../components/index'
+import { PageLayout, PageName, MainLayout, InputField, Spinner, CustomSelect } from '../../../../components/index'
 import { useRouter } from 'next/router'
 import useSWR from 'swr';
 import * as api from '../../../../services/productApi'
 import { useFormik } from 'formik'
+import { useState } from 'react';
 
 function editProductCat() {
     const router = useRouter()
     const productCode = router.query.pcode;
     const { isLoading, isError, data } = useSWR(['/productCatById', productCode], () => api.getProductCategoryById(productCode))
+    const { data: catMap } = useSWR('/product-master/get-all-p-categories', api.getProductCategory);
 
     if (isError) {
         toast.warn("failed to load")
     }
+
+    const options = []
+    if (catMap && catMap.length > 0) {
+        catMap.map(d => {
+            options.push({
+                "value": d.categoryId,
+                "label": d.categoryName
+            })
+        })
+    }
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
@@ -21,6 +34,7 @@ function editProductCat() {
             isHeader: data?.isHeader || "",
             categoryImage: data?.categoryImage || "",
             categoryCode: data?.categoryCode || "",
+            parentCategoryId: data?.parentCategoryId || null,
         },
         onSubmit: values => {
             try {
@@ -33,7 +47,7 @@ function editProductCat() {
     });
 
     if (!data) return <Spinner />
-    console.log(formik.values)
+
     return (
         <>
             <Head>
@@ -73,6 +87,15 @@ function editProductCat() {
                                                 placeholder="Enter Category Name"
                                                 onChange={formik.handleChange}
                                                 onBlur={formik.handleBlur}
+                                            />
+                                        </div>
+                                        <div className='col-md-3'>
+                                            <CustomSelect
+                                                label="Parent Category"
+                                                name="parentCategoryId"
+                                                defaultValue={formik.values.parentCategoryId !== null ? formik.values.parentCategoryId : null}
+                                                options={options}
+                                                onChange={(e) => (formik.setFieldValue('parentCategoryId', e.value))}
                                             />
                                         </div>
                                         <div className='col-md-3'>
